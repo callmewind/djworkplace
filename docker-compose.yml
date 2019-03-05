@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
     environment:
-      - STATIC_ROOT=/static
+      - STATIC_ROOT=/code/static
   nginx:
     container_name: nginx
     image: nginx
