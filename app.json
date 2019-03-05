@@ -1,0 +1,14 @@
+{
+	"name": "djWorkplace",
+	"description": "Human resources management",
+	"repository": "https://github.com/callmewind/djworkplace",
+	"image": "heroku/python",
+	"keywords": ["django", "human", "resource" ],
+	"website": "https://github.com/callmewind/djworkplace",
+	"addons" : [ "heroku-postgresql" ],
+	"env": {
+	"SECRET_KEY": {
+		"description": "A secret key for verifying the integrity of signed cookies.",
+		"generator": "secret"
+	}
+}

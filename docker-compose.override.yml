@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  app:
+    command: python manage.py runserver 0.0.0.0:80
+    ports:
+      - "80:80"
+    environment:
+      - STATIC_ROOT=/code/static

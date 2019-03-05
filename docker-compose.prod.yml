@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  app:
+    command: uwsgi --ini /code/platform/djworkplace-uwsgi.ini
+    ports:
+      - "3031:3031"
+    environment:
+      - STATIC_ROOT=/code/static
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+      - ${PWD}/platform/djworkplace-nginx.conf:/etc/nginx/conf.d/djworkplace-nginx.conf
