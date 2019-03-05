@@ -6,7 +6,7 @@ services:
 env:
   - SECRET_KEY=FOO
 install:
-  - pip install -r requirements.txt
+  - pip install -r platform/requirements.txt
   - pip install coveralls
 before_script:
   - psql -c "CREATE DATABASE travisci;" -U postgres
