@@ -1,12 +1,20 @@
 version: '3'
 
 services:
+  db:
+    container_name: db
+    image: postgres
   app:
     command: uwsgi --ini /code/platform/djworkplace-uwsgi.ini
+    build: 
+      dockerfile: prod-dockerfile
+    image: djworkplace/prod:1
     ports:
       - "3031:3031"
     environment:
       - STATIC_ROOT=/code/static
+    depends_on:
+      - db
 
   nginx:
     container_name: nginx

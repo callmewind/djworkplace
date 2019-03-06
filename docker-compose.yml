@@ -1,15 +1,14 @@
 version: '3'
 
 services:
-  db:
-    container_name: db
-    image: postgres
   app:
     container_name: app
     build: 
       context: platform/
-      dockerfile: app-dockerfile
+      dockerfile: base-dockerfile
+    image: djworkplace/base:1
+    environment:
+      - SECRET_KEY=testing_secret_key
+      - ALLOWED_HOSTS=
     volumes:
       - .:/code
-    depends_on:
-      - db

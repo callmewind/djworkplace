@@ -6,4 +6,5 @@ services:
     ports:
       - "80:80"
     environment:
-      - STATIC_ROOT=/code/static
+      - DATABASE_URL=sqlite:////code/db.sqlite3
+      - DEBUG=True
