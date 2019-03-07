@@ -4,8 +4,7 @@ python:
 services:
   - postgresql
 env:
-  - SECRET_KEY=FOO
-  - "DATABASE_URL=sqlite:////:memory:"
+  - SECRET_KEY="FOO" DATABASE_URL="sqlite:////:memory:"
 install:
   - pip install -r platform/base-requirements.txt
   - pip install coveralls
