@@ -4,8 +4,8 @@ services:
   app:
     container_name: app
     build: 
-      context: platform/
-      dockerfile: base-dockerfile
+      context: .
+      dockerfile: platform/base-dockerfile
     image: djworkplace/base:1
     environment:
       - SECRET_KEY=testing_secret_key

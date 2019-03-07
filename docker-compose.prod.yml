@@ -7,7 +7,7 @@ services:
   app:
     command: uwsgi --ini /code/platform/djworkplace-uwsgi.ini
     build: 
-      dockerfile: prod-dockerfile
+      dockerfile: platform/prod-dockerfile
     image: djworkplace/prod:1
     ports:
       - "3031:3031"
