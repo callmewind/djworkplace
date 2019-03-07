@@ -5,11 +5,19 @@
 	"image": "heroku/python",
 	"keywords": ["django", "human", "resource" ],
 	"website": "https://github.com/callmewind/djworkplace",
-	"addons" : [ "heroku-postgresql" ],
+	"addons" : [
+		{
+			"plan": "heroku-postgresql",
+		}
+	],
 	"env": {
 		"SECRET_KEY": {
 			"description": "A secret key for verifying the integrity of signed cookies.",
 			"generator": "secret"
-		}
+		},
+		"ALLOWED_HOSTS": {
+			"description": "List of domains used in the app",
+			"generator": ".herokuapp.com"
+		},
 	}
 }
