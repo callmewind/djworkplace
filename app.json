@@ -17,7 +17,7 @@
 		},
 		"ALLOWED_HOSTS": {
 			"description": "List of domains used in the app",
-			"generator": ".herokuapp.com"
-		},
+			"value": ".herokuapp.com"
+		}
 	}
 }
