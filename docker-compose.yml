@@ -5,8 +5,7 @@ services:
     container_name: app
     build: 
       context: .
-      dockerfile: platform/base-dockerfile
-    image: djworkplace/base:1
+      dockerfile: platform/dockerfile
     environment:
       - SECRET_KEY=testing_secret_key
       - ALLOWED_HOSTS=

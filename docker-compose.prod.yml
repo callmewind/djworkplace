@@ -6,10 +6,7 @@ services:
     image: postgres
 
   app:
-    command: uwsgi --ini /code/platform/djworkplace-uwsgi.ini
-    build: 
-      dockerfile: platform/prod-dockerfile
-    image: djworkplace/prod:1
+    command: uwsgi --socket :3031 --chdir /code/ --wsgi-file djworkplace/wsgi.py --master --processes 2 --threads 2
     ports:
       - "3031:3031"
     environment:
