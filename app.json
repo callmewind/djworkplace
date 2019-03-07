@@ -7,9 +7,10 @@
 	"website": "https://github.com/callmewind/djworkplace",
 	"addons" : [ "heroku-postgresql" ],
 	"env": {
-	"SECRET_KEY": {
-		"description": "A secret key for verifying the integrity of signed cookies.",
-		"generator": "secret"
+		"SECRET_KEY": {
+			"description": "A secret key for verifying the integrity of signed cookies.",
+			"generator": "secret"
+		}
 	},
 	"buildpacks": [
 		{
