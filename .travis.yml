@@ -5,11 +5,11 @@ services:
   - postgresql
 env:
   - SECRET_KEY=FOO
+  - DATABASE_URL=sqlite:////:memory:
 install:
-  - pip install -r platform/requirements.txt
+  - pip install -r platform/base-requirements.txt
   - pip install coveralls
 before_script:
-  - psql -c "CREATE DATABASE travisci;" -U postgres
   - python manage.py migrate
 script:
   - coverage run --source=. manage.py test
