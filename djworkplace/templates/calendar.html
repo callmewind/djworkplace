@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head-content %}
+{{ block.super }}
+<style type="text/css">
+	.table.calendar { table-layout: fixed; }
+	.table.calendar tbody td {  }
+</style>
+{% endblock head-content %}
+
+{% block body-content %}
+<div class="container">
+	<div class="form-group text-right">
+		<div class="btn-group" role="group">
+			<a href="{% url 'calendar' previous_month.year previous_month.month %}" class="btn btn-outline-primary">
+				{% trans "Prev" %}
+			</a>
+			<a href="{% url 'calendar' %}" class="btn btn-outline-primary">{% trans "Current" %}</a>
+			<a href="{% url 'calendar' next_month.year next_month.month %}" class="btn btn-outline-primary">
+				{% trans "Prev" %}
+			</a>
+		</div>
+	</div>
+	<table class="table table-bordered">
+		<thead>
+			<tr class="font-weight-bold">
+				{% for day in weeks|first %}
+				<td>
+					<span class="d-none d-sm-inline">{{ day|date:'l' }}</span>
+					<span class="d-sm-none">{{ day|date:'D' }}</span>
+				</td>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+			{% for week in weeks %}
+			<tr>
+				{% for day in week %}
+				<td {% if day.month != current_month.month %}class="bg-light"{% elif day == today %}class="bg-primary font-weight-bold"{% endif %}>
+					{{ day|date:'j' }}
+				</td>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock body-content %}
