@@ -3,7 +3,15 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Holidays(models.Model):
-	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user') )
-	start = models.DateField(_('start'))
-	end = models.DateField(_('end'))
+class Holiday(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user') )
+    start = models.DateField(_('start'))
+    end = models.DateField(_('end'))
+
+    def __str__(self):
+        return "%d %s - %s" % (self.user_id, self.start, self.end)
+
+    class Meta:
+        ordering = ['start', 'end']
+        verbose_name = _('holidays')
+        verbose_name_plural = _('holidays')

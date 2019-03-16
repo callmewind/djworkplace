@@ -16,11 +16,13 @@
 	<div class="form-group text-right">
 		<div class="btn-group" role="group">
 			<a href="{% url 'calendar' previous_month.year previous_month.month %}" class="btn btn-outline-primary">
-				{% trans "Prev" %}
+				« {% trans "Prev" %}
 			</a>
-			<a href="{% url 'calendar' %}" class="btn btn-outline-primary">{% trans "Current" %}</a>
+			<a href="{% url 'calendar' %}" class="btn btn-outline-primary">
+				{% trans "Current" %}
+			</a>
 			<a href="{% url 'calendar' next_month.year next_month.month %}" class="btn btn-outline-primary">
-				{% trans "Prev" %}
+				{%trans "Next" %} »
 			</a>
 		</div>
 	</div>
