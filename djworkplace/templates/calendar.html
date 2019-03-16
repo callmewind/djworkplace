@@ -31,10 +31,10 @@
 	<table class="table table-sm table-bordered mb-0">
 		<thead>
 			<tr class="font-weight-bold text-center">
-				{% for day in weeks|first %}
+				{% for calendar_day in weeks|first %}
 				<td  >
-					<span class="d-none d-sm-inline">{{ day|date:'l' }}</span>
-					<span class="d-sm-none">{{ day|date:'D' }}</span>
+					<span class="d-none d-sm-inline">{{ calendar_day.date|date:'l' }}</span>
+					<span class="d-sm-none">{{ calendar_day.date|date:'D' }}</span>
 				</td>
 				{% endfor %}
 			</tr>
@@ -42,11 +42,12 @@
 		<tbody class="small text-truncate">
 			{% for week in weeks %}
 			<tr>
-				{% for day in week %}
-				<td {% if day.month != current_month.month %}class="bg-light"{% endif %}>
-					<p class="text-center{% if day == today %} font-weight-bold{% endif %}">{{ day|date:'j' }}</p>
-					<div class="bg-primary text-white px-2 rounded mb-1">Pe</div>
-					<div class="bg-primary text-white px-2 rounded">sa</div>
+				{% for calendar_day in week %}
+				<td {% if calendar_day.date.month != current_month.month %}class="bg-light"{% endif %}>
+					<p class="text-center{% if calendar_day.date == today %} font-weight-bold{% endif %}">{{ calendar_day.date|date:'j' }}</p>
+					{% for event in calendar_day.events %}
+					<div class="bg-primary text-white px-2 rounded{% if not forloop.last %} mb-1{% endif %}">{{ event }}</div>
+					{% endfor %}
 				</td>
 				{% endfor %}
 			</tr>

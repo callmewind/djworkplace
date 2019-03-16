@@ -28,7 +28,7 @@ class StaffProfile(models.Model):
         return False
 
     def __str__(self):
-        return self.user_id
+        return str(self.user_id)
 
     class Meta:
         verbose_name = _('staff profile')

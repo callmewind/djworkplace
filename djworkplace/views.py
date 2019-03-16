@@ -1,7 +1,15 @@
 from django.views.generic import TemplateView
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Q
 import calendar
+
+class CalendarDay:
+	date = None
+	events = []
+
+	def __init__(self, date):
+		self.date = date
 
 
 class CalendarView(TemplateView):
@@ -9,6 +17,9 @@ class CalendarView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
+
+		days = {}
+
 		today = timezone.now().date()
 		year = self.kwargs.get('year', today.year)
 		month = self.kwargs.get('month', today.month)
@@ -18,16 +29,30 @@ class CalendarView(TemplateView):
 		last_day_of_calendar = last_day_of_month + timedelta(days=6 - last_day_of_month.weekday())
 		context['today'] = today
 		context['weeks'] = list()
-		current_day = first_day_of_calendar
+		current_date = first_day_of_calendar
 		current_week = list()
-		while current_day <= last_day_of_calendar:
-			current_week.append(current_day)
+		while current_date <= last_day_of_calendar:
+			calendar_day = CalendarDay(current_date)
+			days[current_date] = calendar_day
+			current_week.append(calendar_day)
 			if len(current_week) == 7:
 				context['weeks'].append(current_week)
 				current_week = list()
-			current_day = current_day + timedelta(days=1)
+			current_date = current_date + timedelta(days=1)
 		context['previous_month'] = first_day_of_month - timedelta(days=1)
 		context['current_month'] = first_day_of_month
 		context['next_month'] = last_day_of_month + timedelta(days=1)
+		
+
+
+
+		from holidays.models import Holiday
+		holidays = Holiday.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
+		for holiday in holidays:
+			day = max(holiday.start, first_day_of_calendar)
+			while day <= min(holiday.end, last_day_of_calendar):
+				days[day].events.append(holiday)
+				day = day + timedelta(days=1)
+
 		return context
 
