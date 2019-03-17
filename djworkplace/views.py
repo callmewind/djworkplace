@@ -4,12 +4,6 @@ from datetime import timedelta
 from django.db.models import Q
 import calendar
 
-class CalendarDay:
-	date = None
-	events = []
-
-	def __init__(self, date):
-		self.date = date
 
 
 class CalendarView(TemplateView):
@@ -32,7 +26,7 @@ class CalendarView(TemplateView):
 		current_date = first_day_of_calendar
 		current_week = list()
 		while current_date <= last_day_of_calendar:
-			calendar_day = CalendarDay(current_date)
+			calendar_day = {'date': current_date, 'events' : [] }
 			days[current_date] = calendar_day
 			current_week.append(calendar_day)
 			if len(current_week) == 7:
@@ -51,7 +45,7 @@ class CalendarView(TemplateView):
 		for holiday in holidays:
 			day = max(holiday.start, first_day_of_calendar)
 			while day <= min(holiday.end, last_day_of_calendar):
-				days[day].events.append(holiday)
+				days[day]['events'].append(holiday)
 				day = day + timedelta(days=1)
 
 		return context

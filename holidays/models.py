@@ -8,6 +8,7 @@ class Holiday(models.Model):
     start = models.DateField(_('start'))
     end = models.DateField(_('end'))
 
+
     def __str__(self):
         return "%d %s - %s" % (self.user_id, self.start, self.end)
 
