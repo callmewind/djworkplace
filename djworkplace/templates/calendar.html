@@ -46,7 +46,7 @@
 				<td {% if calendar_day.date.month != current_month.month %}class="bg-light"{% endif %}>
 					<p class="text-center{% if calendar_day.date == today %} font-weight-bold{% endif %}">{{ calendar_day.date|date:'j' }}</p>
 					{% for event in calendar_day.events %}
-					<div class="bg-primary text-white px-2 rounded{% if not forloop.last %} mb-1{% endif %}">{{ event }}</div>
+					<div class="bg-primary text-white px-2 rounded{% if not forloop.last %} mb-1{% endif %}">{{ event.calendar_text }}</div>
 					{% endfor %}
 				</td>
 				{% endfor %}
