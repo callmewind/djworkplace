@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', CalendarView.as_view(), name='calendar'),
-    path('calendar/<int:year>-<int:month>/', CalendarView.as_view(), name='calendar'),
+    path('', RedirectView.as_view(pattern_name='staff:calendar'), name='home'),
+    path('staff/', include('staff.urls'))
 ]

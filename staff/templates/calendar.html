@@ -12,21 +12,24 @@
 {% endblock head-content %}
 
 {% block body-content %}
-<div class="container tools">
-	<div class="form-group text-right">
-		<div class="btn-group" role="group">
-			<a href="{% url 'calendar' previous_month.year previous_month.month %}" class="btn btn-outline-primary">
-				« {% trans "Prev" %}
-			</a>
-			<a href="{% url 'calendar' %}" class="btn btn-outline-primary">
-				{% trans "Current" %}
-			</a>
-			<a href="{% url 'calendar' next_month.year next_month.month %}" class="btn btn-outline-primary">
-				{%trans "Next" %} »
-			</a>
+<form id="calendar-filter-form" action="{% url 'staff:calendar' current_month.year current_month.month %}" method="GET">
+	<div class="container">
+		{{ form }}
+		<div class="form-group text-right">
+			<div class="btn-group" role="group">
+				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}" class="btn btn-outline-primary">
+					« {% trans "Prev" %}
+				</a>
+				<a href="{% url 'staff:calendar' %}" class="btn btn-outline-primary">
+					{% trans "Current" %}
+				</a>
+				<a href="{% url 'staff:calendar' next_month.year next_month.month %}" class="btn btn-outline-primary">
+					{%trans "Next" %} »
+				</a>
+			</div>
 		</div>
 	</div>
-</div>
+</form>
 <div class="container calendar pb-3">
 	<table class="table table-sm table-bordered mb-0">
 		<thead>
@@ -55,4 +58,10 @@
 		</tbody>
 	</table>
 </div>
+{{ block.super }}
+<script>
+$(document).on('change', '#calendar-filter-form', function(){
+	$(this).submit();
+});
+</script>
 {% endblock body-content %}

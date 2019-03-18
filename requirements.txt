@@ -3,3 +3,4 @@ django-environ
 psycopg2-binary
 uwsgi
 whitenoise
+django-bootstrap4
