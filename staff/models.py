@@ -8,6 +8,8 @@ from django.dispatch import receiver
 
 class Department(models.Model):
     name = models.CharField(_('name'), max_length=200)
+    holidays = models.PositiveSmallIntegerField(_('holidays'), help_text=_('Yearly holidays'))
+    personal_days = models.PositiveSmallIntegerField(_('personal days'), help_text=_('Yearly personal days'))
 
     def __str__(self):
         return self.name

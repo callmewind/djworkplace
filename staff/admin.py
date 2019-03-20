@@ -12,7 +12,7 @@ class  StaffProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'holidays', 'personal_days',)
     search_fields = ('name',)
 
     
