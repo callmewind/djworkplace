@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n bootstrap4 %}
 
 {% block head-content %}
 {{ block.super }}
@@ -14,16 +14,18 @@
 {% block body-content %}
 <form id="calendar-filter-form" action="{% url 'staff:calendar' current_month.year current_month.month %}" method="GET">
 	<div class="container">
-		{{ form }}
-		<div class="form-group text-right">
-			<div class="btn-group" role="group">
-				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}" class="btn btn-outline-primary">
+		<div class="form-inline mb-3 justify-content-end">
+			{% bootstrap_field form.location show_label=False bound_css_class='' %}
+			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' %}
+			
+			<div class="btn-group ml-2" role="group">
+				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
 					« {% trans "Prev" %}
 				</a>
-				<a href="{% url 'staff:calendar' %}" class="btn btn-outline-primary">
+				<a href="{% url 'staff:calendar' %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
 					{% trans "Current" %}
 				</a>
-				<a href="{% url 'staff:calendar' next_month.year next_month.month %}" class="btn btn-outline-primary">
+				<a href="{% url 'staff:calendar' next_month.year next_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
 					{%trans "Next" %} »
 				</a>
 			</div>
