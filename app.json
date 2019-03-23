@@ -7,7 +7,7 @@
 	"website": "https://github.com/callmewind/djworkplace",
 	"addons" : [
 		{
-			"plan": "heroku-postgresql",
+			"plan": "heroku-postgresql"
 		}
 	],
 	"env": {
