@@ -21,6 +21,7 @@ class  StaffProfileAdmin(admin.ModelAdmin):
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'holidays', 'personal_days',)
     search_fields = ('name',)
+    filter_horizontal = ('managers',)
 
     
 @admin.register(Location)
