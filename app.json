@@ -18,6 +18,22 @@
 		"ALLOWED_HOSTS": {
 			"description": "List of domains used in the app",
 			"value": ".herokuapp.com"
+		},
+		"DEFAULT_ADMIN_USERNAME": {
+			"description": "Choose an username for the first user generated automatically",
+			"value": "admin"
+		},
+		"DEFAULT_ADMIN_EMAIL": {
+			"description": "Email for the first user generated automatically",
+			"value": "admin@example.com"
+		},
+		"DEFAULT_ADMIN_PASSWORD": {
+			"description": "Password for the first user generated automatically. It is recommended to change it after first login",
+			"value": "admin"
+		},
+		"COMPANY_NAME": {
+			"description": "Name of your company",
+			"value": "djWorkplace"
 		}
 	}
 }

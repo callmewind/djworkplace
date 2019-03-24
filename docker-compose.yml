@@ -8,6 +8,10 @@ services:
       dockerfile: platform/dockerfile
     environment:
       - SECRET_KEY=testing_secret_key
-      - ALLOWED_HOSTS=
+      - ALLOWED_HOSTS=localhost
+      - DEFAULT_ADMIN_USERNAME=admin
+      - DEFAULT_ADMIN_EMAIL=admin@example.com
+      - DEFAULT_ADMIN_PASSWORD=admin
+      - COMPANY_NAME=djWorkplace
     volumes:
       - .:/code
