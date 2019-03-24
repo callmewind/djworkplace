@@ -18,7 +18,7 @@
 			{% bootstrap_field form.location show_label=False bound_css_class='' %}
 			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' %}
 			
-			<div class="btn-group ml-2" role="group">
+			<div class="btn-group ml-2 bg-white" role="group">
 				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
 					« {% trans "Prev" %}
 				</a>
@@ -33,7 +33,7 @@
 	</div>
 </form>
 <div class="container calendar pb-3">
-	<table class="table table-sm table-bordered mb-0">
+	<table class="table table-sm table-bordered mb-0 bg-white">
 		<thead>
 			<tr class="font-weight-bold text-center">
 				{% for calendar_day in weeks|first %}
