@@ -29,6 +29,8 @@ if company_name:
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #path('', Home.as_view(), name='home'),
     path('', RedirectView.as_view(pattern_name='staff:calendar'), name='home'),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('staff/', include('staff.urls'))
 ]
