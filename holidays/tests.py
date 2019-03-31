@@ -16,8 +16,6 @@ class HolidaysTestCase(TestCase):
         self.client = Client()
         self.department = Department.objects.create(name='department-test-example', holidays=20, personal_days=2)
         self.worker = get_user_model().objects.create(username='worker', email='worker@example.com')
-        self.worker.staffprofile.department = self.department
-        self.worker.staffprofile.save()
         self.manager = get_user_model().objects.create(username='manager', email='manager@example.com')
 
     def test_holiday_admin(self):
@@ -28,6 +26,16 @@ class HolidaysTestCase(TestCase):
 
     def test_holiday_model(self):
         h = Holiday.objects.create(user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
+        
+        with self.assertRaisesMessage(ValidationError, 'worker must be in a department first'):
+            h.clean()
+        
+        self.worker.staffprofile.department = self.department
+        self.worker.staffprofile.save()
+        
         with self.assertRaisesMessage(ValidationError, '%s is not a manager of %s department' % (self.manager, self.worker.staffprofile.department)):
             h.approved_by = self.manager
-            h.save()
+            h.clean()
+
+        self.department.managers.add(self.manager)
+        h.clean()
