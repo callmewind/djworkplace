@@ -1,0 +1,1 @@
+[{"model": "holidays.holiday", "pk": 1, "fields": {"user": 1, "start": "2050-01-01", "end": "2050-01-10", "approval_date": "2019-03-31T17:53:21.956Z", "approved_by": 1}}]
