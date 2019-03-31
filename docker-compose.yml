@@ -1,6 +1,9 @@
 version: '3'
 
 services:
+  djworkplace_redis:
+    container_name: djworkplace_redis
+    image: redis
   djworkplace_app:
     container_name: djworkplace_app
     build: 
@@ -15,3 +18,5 @@ services:
       - COMPANY_NAME=djWorkplace
     volumes:
       - .:/code
+    depends_on:
+      - djworkplace_redis
