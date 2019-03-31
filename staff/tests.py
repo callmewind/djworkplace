@@ -6,7 +6,7 @@ from django.conf import settings
 
 class CalendarTestCase(TestCase):
 
-    fixtures = ['testing-data.json']
+    fixtures = ['staff-testing-data.json', 'holidays-testing-data.json']
 
     def setUp(self):
         pass
