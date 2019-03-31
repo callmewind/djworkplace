@@ -1,21 +1,21 @@
 version: '3'
 
 services:
-  db:
-    container_name: db
+  djworkplace_db:
+    container_name: djworkplace_db
     image: postgres
 
-  app:
+  djworkplace_app:
     command: uwsgi --socket :3031 --chdir /code/ --wsgi-file djworkplace/wsgi.py --master --processes 2 --threads 2
     ports:
       - "3031:3031"
     environment:
       - DATABASE_URL=postgres://postgres@db/postgres
     depends_on:
-      - db
+      - djworkplace_db
 
-  nginx:
-    container_name: nginx
+  djworkplace_nginx:
+    container_name: djworkplace_nginx
     image: nginx
     depends_on:
       - app

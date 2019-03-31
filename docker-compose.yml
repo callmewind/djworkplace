@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  app:
-    container_name: app
+  djworkplace_app:
+    container_name: djworkplace_app
     build: 
       context: .
       dockerfile: platform/dockerfile
