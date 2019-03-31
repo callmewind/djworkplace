@@ -127,3 +127,7 @@ if env.bool('ENABLE_WHITENOISE', default='DYNO' in os.environ):
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_REDIRECT_URL = 'staff:calendar'
+
+DEFAULT_ADMIN_USERNAME = env('DEFAULT_ADMIN_USERNAME', default='admin')
+DEFAULT_ADMIN_EMAIL = env('DEFAULT_ADMIN_EMAIL', default='admin@example.com')
+DEFAULT_ADMIN_PASSWORD = env('DEFAULT_ADMIN_PASSWORD', default='admin')
