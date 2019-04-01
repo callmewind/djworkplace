@@ -2,19 +2,15 @@
 
 from django.db import migrations
 from django.contrib.auth import get_user_model
-import os
+from django.conf import settings
 
 class Migration(migrations.Migration):
 
-    DEFAULT_ADMIN_USERNAME = 'admin'
-    DEFAULT_ADMIN_EMAIL = 'admin@example.com'
-    DEFAULT_ADMIN_PASSWORD = 'admin'
-
     def create_default_admin(apps, schema_editor):
         get_user_model().objects.create_superuser(
-            os.environ.get('DEFAULT_ADMIN_USERNAME', Migration.DEFAULT_ADMIN_USERNAME), 
-            os.environ.get('DEFAULT_ADMIN_EMAIL', Migration.DEFAULT_ADMIN_EMAIL), 
-            os.environ.get('DEFAULT_ADMIN_PASSWORD', Migration.DEFAULT_ADMIN_PASSWORD), 
+            settings.DEFAULT_ADMIN_USERNAME, 
+            settings.DEFAULT_ADMIN_EMAIL, 
+            settings.DEFAULT_ADMIN_PASSWORD 
         )
 
 

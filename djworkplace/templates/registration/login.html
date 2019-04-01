@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load bootstrap4 i18n %}
+
+{% block head-content %}
+{{ block.super }}
+<style type="text/css">
+.container { height: 100%; }
+</style>
+{% endblock head-content %}
+
+{% block body-content %}
+<div class="container d-flex flex-column justify-content-center">
+	<div class="row">
+		<div class="col-lg-6 offset-lg-3">
+			<div class="jumbotron">
+				<h1 class="text-center">{% trans "Log in" %}</h1>
+				<form method="post" action="{% url 'login' %}">
+					{% csrf_token %}
+					<input type="hidden" name="next" value="{{ next }}">
+					{% bootstrap_form form %}
+					<div class="text-right">
+						{% bootstrap_button _("Send") button_type="submit" button_class="btn-primary" %}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{ block.super }}
+{% endblock body-content %}
