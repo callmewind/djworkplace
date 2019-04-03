@@ -18,7 +18,7 @@ services:
     container_name: djworkplace_nginx
     image: nginx
     depends_on:
-      - app
+      - djworkplace_app
     ports:
       - "80:80"
     volumes:
