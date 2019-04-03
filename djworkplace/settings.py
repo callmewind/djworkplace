@@ -21,12 +21,12 @@ env = environ.Env()
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY', default='DEV_NOT_SO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
 
 
 # Application definition
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'djworkplace.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    'default': env.db(default='sqlite:////code/db.sqlite3')
 }
 
 
@@ -131,3 +131,5 @@ LOGIN_REDIRECT_URL = 'staff:calendar'
 DEFAULT_ADMIN_USERNAME = env('DEFAULT_ADMIN_USERNAME', default='admin')
 DEFAULT_ADMIN_EMAIL = env('DEFAULT_ADMIN_EMAIL', default='admin@example.com')
 DEFAULT_ADMIN_PASSWORD = env('DEFAULT_ADMIN_PASSWORD', default='admin')
+
+CELERY_BROKER_URL = env('REDIS_URL', default='redis://djworkplace_redis:6379/0')

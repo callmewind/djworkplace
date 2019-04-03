@@ -20,7 +20,7 @@ from django.views.generic.base import RedirectView
 import os
 from django.utils.translation import ugettext as _
 
-company_name = os.environ.get('COMPANY_NAME', '')
+company_name = os.environ.get('COMPANY_NAME', 'djWorkplace')
 if company_name:
     admin.site.site_header = _("%s Admin") % company_name
     admin.site.site_title = _("%s Admin Portal") % company_name

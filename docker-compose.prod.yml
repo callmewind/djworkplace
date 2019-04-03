@@ -24,3 +24,7 @@ services:
     volumes:
       - .:/code
       - ${PWD}/platform/djworkplace-nginx.conf:/etc/nginx/conf.d/djworkplace-nginx.conf
+
+  djworkplace_celery:
+    depends_on:
+      - djworkplace_db

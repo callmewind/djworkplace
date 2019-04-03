@@ -4,5 +4,5 @@ psycopg2-binary
 uwsgi
 whitenoise
 django-bootstrap4
-celery
-redis
+celery[redis]
+

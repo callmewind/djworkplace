@@ -4,18 +4,25 @@ services:
   djworkplace_redis:
     container_name: djworkplace_redis
     image: redis
+  
   djworkplace_app:
     container_name: djworkplace_app
     build: 
       context: .
       dockerfile: platform/dockerfile
+    volumes:
+      - .:/code
+    depends_on:
+      - djworkplace_redis
+
+  djworkplace_celery:
+    container_name: djworkplace_celery
+    build: 
+      context: .
+      dockerfile: platform/dockerfile
+    command: celery -A djworkplace worker -l info
     environment:
       - SECRET_KEY=testing_secret_key
-      - ALLOWED_HOSTS=localhost
-      - DEFAULT_ADMIN_USERNAME=admin
-      - DEFAULT_ADMIN_EMAIL=admin@example.com
-      - DEFAULT_ADMIN_PASSWORD=admin
-      - COMPANY_NAME=djWorkplace
     volumes:
       - .:/code
     depends_on:
