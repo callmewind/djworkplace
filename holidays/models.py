@@ -42,5 +42,5 @@ class Holiday(models.Model):
 @receiver(post_save, sender=Holiday)
 def createStaffProfile(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
-        transaction.on_commit(lambda: sendHolidayRequestEmail.delay(args=(instance.pk,)))
+        transaction.on_commit(lambda: sendHolidayRequestEmail.delay(instance.pk,))
 

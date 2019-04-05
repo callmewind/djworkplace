@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os,environ
+from django.conf import global_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,3 +134,5 @@ DEFAULT_ADMIN_EMAIL = env('DEFAULT_ADMIN_EMAIL', default='admin@example.com')
 DEFAULT_ADMIN_PASSWORD = env('DEFAULT_ADMIN_PASSWORD', default='admin')
 
 CELERY_BROKER_URL = env('REDIS_URL', default='redis://djworkplace_redis:6379/0')
+
+EMAIL_BACKEND = env('EMAIL_BACKEND', default=global_settings.EMAIL_BACKEND)
