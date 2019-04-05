@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime
 from .tasks import *
 
 class Holiday(models.Model):
@@ -24,6 +25,10 @@ class Holiday(models.Model):
         super().clean()
         if not self.user.staffprofile.department:
             raise ValidationError('%s must be in a department first' % self.user)
+
+        if self.end < self.start:
+            raise ValidationError("End date can't be before start date")
+
         if self.approved_by:
             if not self.user.staffprofile.department.managers.filter(pk=self.approved_by.pk).exists():
                 raise ValidationError('%s is not a manager of %s department' % (self.approved_by, self.user.staffprofile.department))
@@ -32,6 +37,7 @@ class Holiday(models.Model):
         else:
             self.approval_date = None
 
+    
 
     class Meta:
         ordering = ['-start', '-end']
