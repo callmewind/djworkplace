@@ -136,3 +136,8 @@ DEFAULT_ADMIN_PASSWORD = env('DEFAULT_ADMIN_PASSWORD', default='admin')
 CELERY_BROKER_URL = env('REDIS_URL', default='redis://djworkplace_redis:6379/0')
 
 EMAIL_BACKEND = env('EMAIL_BACKEND', default=global_settings.EMAIL_BACKEND)
+EMAIL_HOST = env('EMAIL_HOST', default='')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+EMAIL_PORT = env.int('EMAIL_HOST_PASSWORD', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
