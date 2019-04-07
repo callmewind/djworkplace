@@ -7,10 +7,10 @@ from django.utils.translation import ugettext_lazy as _
 
 @shared_task
 def sendHolidayRequestEmail(holiday_pk):
-	send_mail(
-	    _('Holiday request'),
-	    'Here is the message.',
-	    'from@example.com',
-	    ['to@example.com']
-	)
+    send_mail(
+        _('Holiday request'),
+        'Here is the message.',
+        'from@example.com',
+        ['to@example.com']
+    )
 

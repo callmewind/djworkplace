@@ -6,10 +6,9 @@ services:
     ports:
       - "80:80"
     environment:
-      - DEBUG=True
+      - "DEBUG=True"
       - "EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend"
-
   djworkplace_celery:
     environment:
-      - DEBUG=True
+      - "DEBUG=True"
       - "EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend"

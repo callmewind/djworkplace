@@ -39,16 +39,15 @@
 			"value": "djWorkplace"
 		},
 		"EMAIL_HOST": {
-			"description": "SMTP Host. Default is Sendgrid SMTP",
-			"value": "smtp.sendgrid.net"
+			"description": "SMTP Host",
 		},
 		"EMAIL_HOST_USER": {
-			"description": "SMTP username.  Leave it blank if using sendgrid with heroku",
-			"value": ""
+			"description": "SMTP username",
+			"required": false
 		},
 		"EMAIL_HOST_PASSWORD": {
-			"description": "SMTP password. Leave it blank if using sendgrid with heroku",
-			"value": ""
+			"description": "SMTP password",
+			"required": false
 		},
 		"EMAIL_PORT": {
 			"description": "SMTP port",
@@ -56,7 +55,8 @@
 		},
 		"EMAIL_USE_TLS": {
 			"description": "Enable SMTP TLS",
-			"value": "True"
+			"value": "True",
+			"required": false
 		}
 	}
 }
