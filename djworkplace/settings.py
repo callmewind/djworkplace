@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap4',
-    'staff',
-    'holidays',
+    'staff.apps.StaffConfig',
+    'holidays.apps.HolidaysConfig',
 ]
 
 MIDDLEWARE = [

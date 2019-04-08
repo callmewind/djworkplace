@@ -2,8 +2,6 @@ from django.conf import settings
 from django import forms
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 class Department(models.Model):
@@ -49,11 +47,3 @@ class StaffProfile(models.Model):
     class Meta:
         verbose_name = _('staff profile')
         verbose_name_plural = _('staff profiles')
-
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def createStaffProfile(sender, instance, created, **kwargs):
-    if created:
-        StaffProfile.objects.create(user=instance)
-

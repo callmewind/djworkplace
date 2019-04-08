@@ -1,12 +1,9 @@
 from django.conf import settings
-from django.db import models, transaction
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from datetime import datetime
-from .tasks import *
 
 class Holiday(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='holidays')
@@ -44,9 +41,4 @@ class Holiday(models.Model):
         verbose_name = _('holidays')
         verbose_name_plural = _('holidays')
 
-
-@receiver(post_save, sender=Holiday)
-def createStaffProfile(sender, instance, created, **kwargs):
-    if created and not instance.approval_date:
-        transaction.on_commit(lambda: sendHolidayRequestEmail.delay(instance.pk,))
 
