@@ -5,4 +5,4 @@ uwsgi
 whitenoise
 django-bootstrap4
 celery[redis]
-
+django_premailer

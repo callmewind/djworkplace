@@ -11,8 +11,8 @@ def sendHolidayRequestEmail(holiday_pk):
         holiday = Holiday.objects.get(pk=holiday_pk)
         send_mail(
             _('Holiday request'),
-            'Here is the message.',
-            'from@example.com',
+            _("%s is requesting a holiday period from %s to %s") % (holiday.user, holiday.start, holiday.end),
+            holiday.user.email,
             [manager.email for manager in holiday.user.staffprofile.department.managers.all()]
         )
     except Holiday.DoesNotExist:
