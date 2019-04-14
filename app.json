@@ -57,6 +57,19 @@
 			"description": "Enable SMTP TLS",
 			"value": "True",
 			"required": false
+		},
+		"EMAIL_DEFAULT_REPLY_TO": {
+			"description": "Default reply-to address",
+			"value": "",
+			"required": false
+		},
+		"APP_URL": {
+			"description": "Application hostname",
+			"value": "http://example.com"
+		},
+		"APP_NAME": {
+			"description": "Application name",
+			"value": "djWorkplace"
 		}
 	}
 }

@@ -1,0 +1,30 @@
+{% extends "email/base.tpl" %} 
+{% load i18n util_tags staticfiles premailer %}
+{% block subject %}{{ subject }}{% if debug_mode_original_to %} [DEBUG - {{ debug_mode_original_to }}]{% endif %}{% endblock subject %}
+
+{% block html %}
+    {% premailer base_url %}
+        <!DOCTYPE html>
+        <html>
+            <head>
+                {% block head-content %}
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    <style type="text/css">
+                        
+                    </style>
+                {% endblock head-content %}
+            </head>
+
+            <body>
+               
+				{% block body %}
+				    {% block text-content %}{% endblock text-content %}
+				    {{ site.name }} {% now "Y" %}
+				{% endblock body %}
+
+            </body>
+        </html>
+    {% endpremailer %}
+{% endblock html %}
+
+{% block text-content %}{{ message }}{% endblock text-content %}

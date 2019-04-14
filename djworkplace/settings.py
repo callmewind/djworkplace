@@ -141,3 +141,7 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_PORT = env.int('EMAIL_PORT', default=587)
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_DEFAULT_REPLY_TO = env('EMAIL_DEFAULT_REPLY_TO', default='noreply@example.com')
+
+APP_URL = env('APP_URL', default='http://example.com')
+APP_NAME = env('APP_NAME', default='djWorkplace')

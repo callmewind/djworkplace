@@ -1,5 +1,8 @@
 import os
 from celery import Celery
+from django.conf import settings
+from django.utils import translation
+from mail_templated import EmailMessage
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djworkplace.settings')
 
@@ -13,31 +16,15 @@ app.autodiscover_tasks()
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
-'''
-def send_mail(site, template, to, subject, context = {}, language_code='en', reply_to=settings.CONTACT_EMAIL):
-    context['CONTACT_EMAIL'] = settings.CONTACT_EMAIL
-    context['site'] = site
-    context['base_url'] = 'https://%s' %  site.domain
-    if settings.DEBUG:
-        context['base_url'] = 'http://%s' %  site.domain
-        context['debug_mode_original_to'] = to
-        to = settings.DEFAULT_EMAIL_TEST
-    try:
-        with translation.override(language_code):
-            context['subject'] = subject.format(**context)
-            #Cuando enviamos mails para experts desde una mb, no incluir el prefijo
-            script_prefix = get_script_prefix()
-            if site.pk == 1:
-                set_script_prefix('/')
-            message = EmailMessage(template, 
-                                   context, 
-                                   "%s <%s>" % (site.name, settings.CONTACT_EMAIL, ),
-                                   to=[to],
-                                   headers={'X-SMTPAPI': '{"category":' +json.dumps([template, get_language()]) +'}' },
-                                   reply_to={reply_to},
-                                   )
-            message.send()
-            set_script_prefix(script_prefix)
-    except Exception, e:
-        logger.exception("Exception sending mail: %s", force_text(e))'''
-
+@app.task(bind=True)
+def send_mail(template, to, subject, context={}, language=settings.LANGUAGE_CODE, reply_to=settings.EMAIL_DEFAULT_REPLY_TO):
+  context['base_url'] = settings.APP_URL
+  with translation.override(language):
+    context['subject'] = subject
+    message = EmailMessage(template, 
+      context, 
+      "%s <%s>" % (settings.APP_NAME, settings.EMAIL_DEFAULT_REPLY_TO, ),
+      to=to if type(to) is list else [to],
+      reply_to={settings.EMAIL_DEFAULT_REPLY_TO},
+    )
+    message.send()
