@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.conf import settings
 from datetime import date, timedelta
 from .models import *
-from .tasks import *
 from staff.models import Department
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -35,8 +34,6 @@ class HolidaysTestCase(TestCase):
         self.worker.staffprofile.save()
 
         h.save()
-
-        sendHolidayRequestEmail(h.pk)
         
         with self.assertRaisesMessage(ValidationError, '%s is not a manager of %s department' % (self.manager, self.worker.staffprofile.department)):
             h.approved_by = self.manager
