@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'staff.apps.StaffConfig',
     'holidays.apps.HolidaysConfig',
+    'django_premailer',
 ]
 
 MIDDLEWARE = [

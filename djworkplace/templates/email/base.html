@@ -1,30 +1,52 @@
-{% extends "email/base.tpl" %} 
-{% load i18n util_tags staticfiles premailer %}
-{% block subject %}{{ subject }}{% if debug_mode_original_to %} [DEBUG - {{ debug_mode_original_to }}]{% endif %}{% endblock subject %}
+{% load i18n staticfiles premailer %}
+{% premailer base_url %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% block head-content %}
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <style type="text/css">
+            body{
+                margin:0;
+                padding:0;
+                font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+                font-size: 16px;
+                color: black;
+            }
+            img{
+                border:0 none;
+                height:auto;
+                line-height:100%;
+                outline:none;
+                text-decoration:none;
+            }
 
-{% block html %}
-    {% premailer base_url %}
-        <!DOCTYPE html>
-        <html>
-            <head>
-                {% block head-content %}
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <style type="text/css">
-                        
-                    </style>
-                {% endblock head-content %}
-            </head>
+            a img{
+                border:0 none;
+            }
 
-            <body>
-               
-				{% block body %}
-				    {% block text-content %}{% endblock text-content %}
-				    {{ site.name }} {% now "Y" %}
-				{% endblock body %}
+            .imageFix{
+                display:block;
+            }
 
-            </body>
-        </html>
-    {% endpremailer %}
-{% endblock html %}
+            table, td{
+                border-collapse:collapse;
+            }
 
-{% block text-content %}{{ message }}{% endblock text-content %}
+            #bodyTable{
+                height:100% !important;
+                margin:0;
+                padding:0;
+                width:100% !important;
+            }
+            </style>
+        {% endblock head-content %}
+    </head>
+    <body>
+		{% block body %}
+	    {% block text-content %}<p>{{ message }}</p>{% endblock text-content %}
+	    <p><small>{{ site.name }} {% now "Y" %}</small></p>
+		{% endblock body %}
+    </body>
+</html>
+{% endpremailer %}
