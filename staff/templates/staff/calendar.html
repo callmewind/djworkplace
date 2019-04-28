@@ -5,27 +5,27 @@
 {{ block.super }}
 <style type="text/css">
 	.container.calendar { flex-grow: 1 }
-	.calendar .table { height: 100%; }
-	.calendar .table thead tr{ height: 1rem; }
-	.calendar .table td { width: 14.2857%; }
+	.calendar .table { height: 100% }
+	.calendar .table thead tr{ height: 1rem }
+	.calendar .table td { width: 14.2857% }
 </style>
 {% endblock head-content %}
 
-{% block body-content %}
+{% block main %}
 <form id="calendar-filter-form" action="{% url 'staff:calendar' current_month.year current_month.month %}" method="GET">
 	<div class="container">
-		<div class="form-inline mb-3 justify-content-end">
-			{% bootstrap_field form.location show_label=False bound_css_class='' %}
-			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' %}
+		<div class="form-inline mb-2 mt-1 justify-content-end">
+			{% bootstrap_field form.location show_label=False bound_css_class='' size='small' %}
+			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' size='small' %}
 			
 			<div class="btn-group ml-2 bg-white" role="group">
-				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
+				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary btn-sm">
 					« {% trans "Prev" %}
 				</a>
-				<a href="{% url 'staff:calendar' %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
+				<a href="{% url 'staff:calendar' %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary btn-sm">
 					{% trans "Current" %}
 				</a>
-				<a href="{% url 'staff:calendar' next_month.year next_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary">
+				<a href="{% url 'staff:calendar' next_month.year next_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary btn-sm">
 					{%trans "Next" %} »
 				</a>
 			</div>
@@ -37,7 +37,7 @@
 		<thead>
 			<tr class="font-weight-bold text-center">
 				{% for calendar_day in weeks|first %}
-				<td  >
+				<td>
 					<span class="d-none d-sm-inline">{{ calendar_day.date|date:'l' }}</span>
 					<span class="d-sm-none">{{ calendar_day.date|date:'D' }}</span>
 				</td>
@@ -60,6 +60,9 @@
 		</tbody>
 	</table>
 </div>
+{% endblock main %}
+
+{% block body-content %}
 {{ block.super }}
 <script>
 $(document).on('change', '#calendar-filter-form', function(){

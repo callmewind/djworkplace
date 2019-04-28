@@ -8,7 +8,7 @@ import calendar
 
 
 class CalendarView(LoginRequiredMixin, TemplateView):
-    template_name = 'calendar.html'
+    template_name = 'staff/calendar.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -55,4 +55,3 @@ class CalendarView(LoginRequiredMixin, TemplateView):
                 day = day + timedelta(days=1)
 
         return context
-
