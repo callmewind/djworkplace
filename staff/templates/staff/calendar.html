@@ -4,20 +4,17 @@
 {% block head-content %}
 {{ block.super }}
 <style type="text/css">
-	.container.calendar { flex-grow: 1 }
-	.calendar .table { height: 100% }
 	.calendar .table thead tr{ height: 1rem }
 	.calendar .table td { width: 14.2857% }
 </style>
 {% endblock head-content %}
 
 {% block main %}
-<form id="calendar-filter-form" action="{% url 'staff:calendar' current_month.year current_month.month %}" method="GET">
-	<div class="container">
-		<div class="form-inline mb-2 mt-1 justify-content-end">
+<main class="container calendar flex-grow-1 d-flex flex-column">
+	<form id="calendar-filter-form" action="{% url 'staff:calendar' current_month.year current_month.month %}" method="GET">
+		<div class="form-inline mb-2 mt-1">
 			{% bootstrap_field form.location show_label=False bound_css_class='' size='small' %}
 			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' size='small' %}
-			
 			<div class="btn-group ml-2 bg-white" role="group">
 				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary btn-sm">
 					« {% trans "Prev" %}
@@ -30,36 +27,36 @@
 				</a>
 			</div>
 		</div>
-	</div>
-</form>
-<div class="container calendar pb-3">
-	<table class="table table-sm table-bordered mb-0 bg-white">
-		<thead>
-			<tr class="font-weight-bold text-center">
-				{% for calendar_day in weeks|first %}
-				<td>
-					<span class="d-none d-sm-inline">{{ calendar_day.date|date:'l' }}</span>
-					<span class="d-sm-none">{{ calendar_day.date|date:'D' }}</span>
-				</td>
-				{% endfor %}
-			</tr>
-		</thead>
-		<tbody class="small text-truncate">
-			{% for week in weeks %}
-			<tr>
-				{% for calendar_day in week %}
-				<td {% if calendar_day.date.month != current_month.month %}class="bg-light"{% endif %}>
-					<p class="text-center{% if calendar_day.date == today %} font-weight-bold{% endif %}">{{ calendar_day.date|date:'j' }}</p>
-					{% for event in calendar_day.events %}
-					<div class="bg-primary text-white px-2 rounded{% if not forloop.last %} mb-1{% endif %}">{{ event.calendar_text }}</div>
+	</form>
+	<div class="flex-grow-1 pb-3">
+		<table class="table table-sm table-bordered bg-white h-100">
+			<thead>
+				<tr class="font-weight-bold text-center">
+					{% for calendar_day in weeks|first %}
+					<td>
+						<span class="d-none d-sm-inline">{{ calendar_day.date|date:'l' }}</span>
+						<span class="d-sm-none">{{ calendar_day.date|date:'D' }}</span>
+					</td>
 					{% endfor %}
-				</td>
+				</tr>
+			</thead>
+			<tbody class="small text-truncate">
+				{% for week in weeks %}
+				<tr>
+					{% for calendar_day in week %}
+					<td {% if calendar_day.date.month != current_month.month %}class="bg-light"{% endif %}>
+						<p class="text-center{% if calendar_day.date == today %} font-weight-bold{% endif %}">{{ calendar_day.date|date:'j' }}</p>
+						{% for event in calendar_day.events %}
+						<div class="bg-primary text-white px-2 rounded{% if not forloop.last %} mb-1{% endif %}">{{ event.calendar_text }}</div>
+						{% endfor %}
+					</td>
+					{% endfor %}
+				</tr>
 				{% endfor %}
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-</div>
+			</tbody>
+		</table>
+	</div>
+</main>
 {% endblock main %}
 
 {% block body-content %}

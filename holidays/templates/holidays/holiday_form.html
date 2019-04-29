@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 {% load i18n bootstrap4 %}
 {% block main %}
-<form>
-{% bootstrap_form form %}
-{{ form.start }}
-</form>
+<main class="container my-auto">
+	<div class="row">
+		<div class="col-lg-6 offset-lg-3">
+			<div class="jumbotron">
+				<h1 class="text-center">{% trans "Holidays request" %}</h1>
+				<form method="POST" action="{% url 'holidays:create' %}">
+					{% csrf_token %}
+					{% bootstrap_form form %}
+					{% bootstrap_button _("Send request") button_type="submit" button_class="btn-primary" %}
+				</form>
+			</div>
+		</div>
+	</div>
+</main>
 {% endblock main %}

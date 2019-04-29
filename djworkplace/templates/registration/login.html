@@ -1,15 +1,8 @@
 {% extends 'base.html' %}
 {% load bootstrap4 i18n %}
 
-{% block head-content %}
-{{ block.super }}
-<style type="text/css">
-.container { height: 100%; }
-</style>
-{% endblock head-content %}
-
-{% block body-content %}
-<div class="container d-flex flex-column justify-content-center">
+{% block main %}
+<main class="container my-auto">
 	<div class="row">
 		<div class="col-lg-6 offset-lg-3">
 			<div class="jumbotron">
@@ -25,6 +18,5 @@
 			</div>
 		</div>
 	</div>
-</div>
-{{ block.super }}
-{% endblock body-content %}
+</main>
+{% endblock main %}

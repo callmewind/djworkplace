@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+
 class Department(models.Model):
     name = models.CharField(_('name'), max_length=200)
     holidays = models.PositiveSmallIntegerField(_('holidays'), help_text=_('Yearly holidays'))

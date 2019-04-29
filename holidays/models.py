@@ -20,7 +20,7 @@ class Holiday(models.Model):
 
     def clean(self):
         super().clean()
-        if not self.user.staffprofile.department:
+        if self.user_id and not self.user.staffprofile.department:
             raise ValidationError('%s must be in a department first' % self.user)
 
         if self.end < self.start:
