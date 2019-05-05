@@ -13,9 +13,12 @@ class CreateHoliday(CreateView):
     def get_success_url(self):
         return reverse('staff:calendar', args=[self.object.start.year, self.object.start.month])
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update({'user' : self.request.user})
+        return initial
+
     def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.user = self.request.user
         response = super(CreateHoliday, self).form_valid(form)
-        messages.info(self.request, _('Your holidays reset has been sent'))
+        messages.info(self.request, _('Your holidays request has been sent'))
         return response

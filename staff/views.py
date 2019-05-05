@@ -3,7 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
+from collections import OrderedDict
 from .forms import *
+from .signals import calendar_display
 import calendar
 
 
@@ -13,7 +15,7 @@ class CalendarView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        days = {}
+        days = OrderedDict()
 
         today = timezone.now().date()
         year = self.kwargs.get('year', today.year)
@@ -39,19 +41,10 @@ class CalendarView(LoginRequiredMixin, TemplateView):
         context['next_month'] = last_day_of_month + timedelta(days=1)
         form = CalendarFilterForm(self.request.GET)
         context['form'] = form
-
-        from holidays.models import Holiday
-        holidays = Holiday.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
         if form.is_valid():
-            if form.cleaned_data['department']:
-                holidays = holidays.filter(user__staffprofile__department=form.cleaned_data['department'])
-            if form.cleaned_data['location']:
-                holidays = holidays.filter(user__staffprofile__location=form.cleaned_data['location'])
-
-        for holiday in holidays:
-            day = max(holiday.start, first_day_of_calendar)
-            while day <= min(holiday.end, last_day_of_calendar):
-                days[day]['events'].append(holiday)
-                day = day + timedelta(days=1)
-
+            calendar_display.send(sender=self.__class__, days=days,
+                department=form.cleaned_data['department'], location=form.cleaned_data['location'])
+        else:
+            calendar_display.send(sender=self.__class__, days=days, department=None, location=None)
         return context
+

@@ -1,0 +1,4 @@
+{% load i18n %}
+<div class="{{ event.approval_date|yesno:'bg-primary text-white,text-primary' }} border border-primary px-2 rounded d-flex justify-content-between{% if not forloop.last %} mb-1{% endif %}" title="{% if event.approval_date %}{% trans 'Request approved' %}{% else %}{% trans 'Request pending' %}{% endif %}">
+	<span>☀️</span> <span>{{ event.user }}</span>
+</div>
