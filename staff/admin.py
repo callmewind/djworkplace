@@ -19,7 +19,7 @@ class  StaffProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'holidays', 'personal_days',)
+    list_display = ('name', 'vacations', 'personal_days',)
     search_fields = ('name',)
     filter_horizontal = ('managers',)
 

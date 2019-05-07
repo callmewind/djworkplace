@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import *
 
-@admin.register(Holiday)
-class HolidayAdmin(admin.ModelAdmin):
+@admin.register(Vacation)
+class VacationsAdmin(admin.ModelAdmin):
 	list_select_related = ('user__staffprofile__department', 'user__staffprofile__location')
 	list_display = ('user', 'start', 'end', 'department', 'location', 'approval_date',)
 	list_filter = ('user__staffprofile__department', 'user__staffprofile__location')
@@ -16,3 +16,13 @@ class HolidayAdmin(admin.ModelAdmin):
 
 	def location(self, obj):
 		return obj.user.staffprofile.location
+
+@admin.register(PublicHoliday)
+class PublicHolidasAdmin(admin.ModelAdmin):
+	list_select_related = ('location',)
+	list_display = ('date', 'yearly', 'location')
+	list_filter = ('yearly',)
+	search_fields = ('location__name',)
+	
+	
+	

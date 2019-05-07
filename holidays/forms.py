@@ -1,13 +1,13 @@
 from django import forms
 from .models import *
 
-class HolidayForm(forms.ModelForm):
+class VacationsForm(forms.ModelForm):
 
     def clean_user(self):
         return self.initial['user']
 
     class Meta:
-        model = Holiday
+        model = Vacation
         fields = ['start', 'end', 'user']
         widgets = {
             'start': forms.DateInput(attrs={'type': 'date'}),

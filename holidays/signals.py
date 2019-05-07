@@ -7,13 +7,13 @@ from staff.views import CalendarView
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
-@receiver(post_save, sender=Holiday)
-def onHolidayRequest(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Vacation)
+def onVacationsRequest(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
-                _('Holiday request'),
-                _("%s is requesting a holiday period from %s to %s") % (instance.user, instance.start, instance.end),
+                _('Vacations request'),
+                _("%s is requesting a vacation period from %s to %s") % (instance.user, instance.start, instance.end),
                 [manager.email for manager in instance.user.staffprofile.department.managers.all()]
             )
         )
@@ -24,15 +24,15 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     first_day_of_calendar = next(iter(day_list))
     last_day_of_calendar = next(reversed(day_list)) 
 
-    holidays = Holiday.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
+    vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
     if department:
-        holidays = holidays.filter(user__staffprofile__department=department)
+        vacations = vacations.filter(user__staffprofile__department=department)
     if location:
-        holidays = holidays.filter(user__staffprofile__location=location)
+        vacations = vacations.filter(user__staffprofile__location=location)
 
-    for holiday in holidays:
-        day = max(holiday.start, first_day_of_calendar)
-        while day <= min(holiday.end, last_day_of_calendar):
-            days[day]['events'].append(holiday)
+    for vacation in vacations:
+        day = max(vacation.start, first_day_of_calendar)
+        while day <= min(vacation.end, last_day_of_calendar):
+            days[day]['events'].append(vacation)
             day = day + timedelta(days=1)
 

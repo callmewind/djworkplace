@@ -6,9 +6,9 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 
-class CreateHoliday(CreateView):
-    model = Holiday
-    form_class = HolidayForm
+class CreateVacations(CreateView):
+    model = Vacation
+    form_class = VacationsForm
 
     def get_success_url(self):
         return reverse('staff:calendar', args=[self.object.start.year, self.object.start.month])
@@ -19,6 +19,6 @@ class CreateHoliday(CreateView):
         return initial
 
     def form_valid(self, form):
-        response = super(CreateHoliday, self).form_valid(form)
-        messages.info(self.request, _('Your holidays request has been sent'))
+        response = super(CreateVacations, self).form_valid(form)
+        messages.info(self.request, _('Your vacations request has been sent'))
         return response
