@@ -14,7 +14,7 @@ class VacationsTestCase(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.department = Department.objects.create(name='department-test-example', holidays=20, personal_days=2)
+        self.department = Department.objects.create(name='department-test-example', vacations=20, personal_days=2)
         self.worker = get_user_model().objects.create(username='worker', email='worker@example.com')
         self.manager = get_user_model().objects.create(username='manager', email='manager@example.com')
 
