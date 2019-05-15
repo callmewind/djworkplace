@@ -49,6 +49,7 @@ class Vacation(models.Model):
         verbose_name_plural = _('vacations')
 
 class PublicHoliday(models.Model):
+    calendar_template = 'holidays/holiday_event.html'
     date = models.DateField(_('date'))
     yearly = models.BooleanField(_('yearly'))
     name = models.CharField(_('name'), max_length=200)

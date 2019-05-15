@@ -24,6 +24,14 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     first_day_of_calendar = next(iter(day_list))
     last_day_of_calendar = next(reversed(day_list)) 
 
+    public_holidays = PublicHoliday.objects.filter(
+        Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar))
+    if location:
+        public_holidays = public_holidays.filter(Q(location__isnull=True)|Q(location=location))
+    for holiday in public_holidays:
+        days[holiday.date]['events'].append(holiday)
+
+
     vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
     if department:
         vacations = vacations.filter(user__staffprofile__department=department)
@@ -35,4 +43,6 @@ def on_calendar_display(sender, days, department, location, **kwargs):
         while day <= min(vacation.end, last_day_of_calendar):
             days[day]['events'].append(vacation)
             day = day + timedelta(days=1)
+
+
 
