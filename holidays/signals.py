@@ -25,13 +25,20 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     last_day_of_calendar = next(reversed(day_list)) 
 
     public_holidays = PublicHoliday.objects.filter(
-        #Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar)|
+        Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar)|
         Q(date__month__gte=first_day_of_calendar.month, date__month__lte=last_day_of_calendar.month, yearly=True)
     )
     if location:
         public_holidays = public_holidays.filter(Q(location__isnull=True)|Q(location=location))
     for holiday in public_holidays:
-        days[holiday.date]['events'].append(holiday)
+        if holiday.date in days:
+            days[holiday.date]['events'].append(holiday)
+        elif holiday.yearly: #try to fit yearly events
+            for y in range(first_day_of_calendar.year, last_day_of_calendar.year + 1):
+                holiday.date = holiday.date.replace(year=y)
+                if holiday.date in days:
+                    days[holiday.date]['events'].append(holiday)
+                    break
 
 
     vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
