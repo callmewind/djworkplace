@@ -25,7 +25,9 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     last_day_of_calendar = next(reversed(day_list)) 
 
     public_holidays = PublicHoliday.objects.filter(
-        Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar))
+        #Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar)|
+        Q(date__month__gte=first_day_of_calendar.month, date__month__lte=last_day_of_calendar.month, yearly=True)
+    )
     if location:
         public_holidays = public_holidays.filter(Q(location__isnull=True)|Q(location=location))
     for holiday in public_holidays:
