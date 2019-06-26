@@ -39,7 +39,7 @@
 			"value": "djWorkplace"
 		},
 		"EMAIL_HOST": {
-			"description": "SMTP Host",
+			"description": "SMTP Host"
 		},
 		"EMAIL_HOST_USER": {
 			"description": "SMTP username",
