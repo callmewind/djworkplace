@@ -1,0 +1,4 @@
+{% load i18n %}
+<div class="bg-warning border border-warning px-2 rounded d-flex justify-content-between{% if not forloop.last %} mb-1{% endif %}" title="{% blocktrans %}{{ event }}'s birthday{% endblocktrans %}">
+	<span>🎂</span> <span>{{ event }}</span>
+</div>

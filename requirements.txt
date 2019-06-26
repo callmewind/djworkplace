@@ -5,5 +5,4 @@ uwsgi
 whitenoise
 django-bootstrap4
 celery[redis]
-django-mail-templated
 django_premailer

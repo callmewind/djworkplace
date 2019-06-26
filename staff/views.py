@@ -36,6 +36,8 @@ class CalendarView(LoginRequiredMixin, TemplateView):
                 context['weeks'].append(current_week)
                 current_week = list()
             current_date = current_date + timedelta(days=1)
+        for birthday in Birthday.objects.filter(birthday__in=days.keys()).select_related('user'):
+            days[birthday.birthday]['events'].append(birthday)
         context['previous_month'] = first_day_of_month - timedelta(days=1)
         context['current_month'] = first_day_of_month
         context['next_month'] = last_day_of_month + timedelta(days=1)

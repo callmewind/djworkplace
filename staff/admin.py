@@ -4,7 +4,7 @@ from .models import *
 @admin.register(StaffProfile)
 class  StaffProfileAdmin(admin.ModelAdmin):
     readonly_fields = ('user',)
-    list_display = ('user', 'department', 'location',)
+    list_display = ('user', 'department', 'location', 'birthday',)
     list_select_related = ('user','department', 'location',)
     list_filter = ('department', 'location',)
     ordering = ('user__first_name', 'user__last_name')
