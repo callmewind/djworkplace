@@ -20,6 +20,7 @@ def onVacationsRequest(sender, instance, created, **kwargs):
 
 @receiver(calendar_display, sender=CalendarView)
 def on_calendar_display(sender, days, department, location, **kwargs):
+
     day_list = list(days.keys())
     first_day_of_calendar = next(iter(day_list))
     last_day_of_calendar = next(reversed(day_list)) 
@@ -30,16 +31,23 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     )
     if location:
         public_holidays = public_holidays.filter(Q(location__isnull=True)|Q(location=location))
+
+    public_holidays_dates = list()
+
     for holiday in public_holidays:
         if holiday.date in days:
             days[holiday.date]['events'].append(holiday)
+            public_holidays_dates.append(holiday.date)
         elif holiday.yearly: #try to fit yearly events
             for y in range(first_day_of_calendar.year, last_day_of_calendar.year + 1):
                 holiday.date = holiday.date.replace(year=y)
                 if holiday.date in days:
                     days[holiday.date]['events'].append(holiday)
+                    public_holidays_dates.append(holiday.date)
                     break
 
+    def is_working_day(date):
+        return date.weekday() < 5 and date not in public_holidays_dates
 
     vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
     if department:
@@ -50,7 +58,8 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     for vacation in vacations:
         day = max(vacation.start, first_day_of_calendar)
         while day <= min(vacation.end, last_day_of_calendar):
-            days[day]['events'].append(vacation)
+            if is_working_day(day):
+                days[day]['events'].append(vacation)
             day = day + timedelta(days=1)
 
 
