@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         get_user_model().objects.filter(username=os.environ.get('DEFAULT_ADMIN_USERNAME', Migration.DEFAULT_ADMIN_USERNAME)).delete()
 
     dependencies = [
-        ('staff', '0001_initial'),
+        ('staff', '0006_staffprofile_birthday'),
     ]
 
     operations = [
