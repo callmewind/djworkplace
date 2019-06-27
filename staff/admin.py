@@ -1,20 +1,33 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
 from .models import *
 
-@admin.register(StaffProfile)
-class  StaffProfileAdmin(admin.ModelAdmin):
-    readonly_fields = ('user',)
-    list_display = ('user', 'department', 'location', 'birthday',)
-    list_select_related = ('user','department', 'location',)
-    list_filter = ('department', 'location',)
-    ordering = ('user__first_name', 'user__last_name')
-    search_fields = ('user__first_name', 'user__last_name', 'user__username', 'user__email')
+admin.site.unregister(User)
 
-    def has_add_permission(self, request, obj=None):
+class StaffProfileInline(admin.TabularInline):
+    model = StaffProfile
+    extra = 0
+
+    def has_add_permission(self, request):
+        return False
+        
+    def has_delete_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-    	return False
+@admin.register(User)
+class StaffAdmin(UserAdmin):
+    list_filter = ('staffprofile__department', 'staffprofile__location',) + UserAdmin.list_filter
+    ordering = ('first_name', 'last_name')
+    inlines = (StaffProfileInline,)
+    list_select_related = ('staffprofile__department', 'staffprofile__location',)
+    list_display = UserAdmin.list_display + ('department', 'location',)
+
+    def department(self, obj):
+        return obj.staffprofile.department
+
+    def location(self, obj):
+        return obj.staffprofile.location
 
 
 @admin.register(Department)

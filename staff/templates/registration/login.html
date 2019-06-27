@@ -11,6 +11,9 @@
 					{% csrf_token %}
 					<input type="hidden" name="next" value="{{ next }}">
 					{% bootstrap_form form %}
+					<small class="form-text text-muted">
+					  <a href="{% url 'password_reset' %}">{% trans "Recover password" %}</a>
+					</small>
 					<div class="text-right">
 						{% bootstrap_button _("Send") button_type="submit" button_class="btn-primary" %}
 					</div>

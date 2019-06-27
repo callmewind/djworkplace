@@ -53,7 +53,7 @@ class PublicHoliday(models.Model):
     date = models.DateField(_('date'))
     yearly = models.BooleanField(_('yearly'))
     name = models.CharField(_('name'), max_length=200)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name=_('location'), blank=True, null=True)
+    locations = models.ManyToManyField(Location, verbose_name=_('locations'), related_name='local_holidays')
 
     def __str__(self):
         return self.name

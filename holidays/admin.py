@@ -19,10 +19,12 @@ class VacationsAdmin(admin.ModelAdmin):
 
 @admin.register(PublicHoliday)
 class PublicHolidasAdmin(admin.ModelAdmin):
-	list_select_related = ('location',)
-	list_display = ('date', 'yearly', 'location')
-	list_filter = ('yearly',)
+	list_display = ('date', 'yearly')
+	list_filter = ('yearly', 'locations',)
 	search_fields = ('location__name',)
+
+	def get_queryset(self, request):
+		return parent().get_queryset(request)
 	
 	
 	
