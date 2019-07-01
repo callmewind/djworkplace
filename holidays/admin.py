@@ -22,9 +22,10 @@ class PublicHolidaysAdmin(admin.ModelAdmin):
 	list_display = ('date', 'yearly')
 	list_filter = ('yearly', 'locations',)
 	search_fields = ('location__name',)
+	filter_horizontal = ('locations',)
 
 	def get_queryset(self, request):
-		return parent().get_queryset(request)
+		return super().get_queryset(request)
 	
 	
 	
