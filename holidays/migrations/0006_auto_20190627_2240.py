@@ -6,7 +6,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('staff', '0003_birthday'),
         ('holidays', '0005_publicholiday'),
     ]
 

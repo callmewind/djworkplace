@@ -1,1 +1,5 @@
-[{"model": "staff.department", "pk": 1, "fields": {"name": "Test department", "vacations": 20, "personal_days": 2, "managers": [1]}}, {"model": "staff.location", "pk": 1, "fields": {"name": "Test location"}}, {"model": "staff.staffprofile", "pk": 1, "fields": {"user": 1, "department": 1, "location": 1}}]
+[
+	{"model": "staff.department", "pk": 1, "fields": {"name": "Test department", "vacations": 20, "personal_days": 2, "managers": [1]}},
+	{"model": "staff.location", "pk": 1, "fields": {"name": "Test location"}}, 
+	{"model": "staff.staffprofile", "pk": 1, "fields": {"user": 1, "department": 1, "location": 1}}
+]

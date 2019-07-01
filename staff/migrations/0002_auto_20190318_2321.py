@@ -3,22 +3,29 @@
 from django.db import migrations
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
+
 
 class Migration(migrations.Migration):
 
     def create_default_admin(apps, schema_editor):
-        get_user_model().objects.create_superuser(
-            settings.DEFAULT_ADMIN_USERNAME, 
-            settings.DEFAULT_ADMIN_EMAIL, 
-            settings.DEFAULT_ADMIN_PASSWORD 
-        )
 
+        User = apps.get_model('auth', 'User')
+        User.objects.create(
+           username=settings.DEFAULT_ADMIN_USERNAME, 
+           email=settings.DEFAULT_ADMIN_EMAIL, 
+           password=make_password(settings.DEFAULT_ADMIN_PASSWORD),
+           is_staff=True,
+           is_superuser=True
+        )
+        
 
     def remove_default_admin(apps, schema_editor):
-        get_user_model().objects.filter(username=os.environ.get('DEFAULT_ADMIN_USERNAME', Migration.DEFAULT_ADMIN_USERNAME)).delete()
+        User = apps.get_model('auth', 'User')
+        User.objects.filter(username=os.environ.get('DEFAULT_ADMIN_USERNAME', Migration.DEFAULT_ADMIN_USERNAME)).delete()
 
     dependencies = [
-        ('staff', '0006_staffprofile_birthday'),
+        ('staff', '0001_initial'),
     ]
 
     operations = [

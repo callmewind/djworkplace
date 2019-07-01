@@ -18,7 +18,7 @@ class VacationsAdmin(admin.ModelAdmin):
 		return obj.user.staffprofile.location
 
 @admin.register(PublicHoliday)
-class PublicHolidasAdmin(admin.ModelAdmin):
+class PublicHolidaysAdmin(admin.ModelAdmin):
 	list_display = ('date', 'yearly')
 	list_filter = ('yearly', 'locations',)
 	search_fields = ('location__name',)
