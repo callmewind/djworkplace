@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 from staff.models import Location
 
 class Vacation(models.Model):
@@ -12,11 +12,16 @@ class Vacation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='vacations')
     start = models.DateField(_('start'))
     end = models.DateField(_('end'))
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     approval_date = models.DateTimeField(blank=True, null=True, editable=False)
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True)
 
     def __str__(self):
         return "%d %s - %s" % (self.user_id, self.start, self.end)
+
+    def dates(self):
+        return (self.start + timedelta(days=d) for d in range((self.end - self.start).days + 1))
 
     def clean(self):
         super().clean()
@@ -57,7 +62,7 @@ class PublicHoliday(models.Model):
 
     def __str__(self):
         return self.name
-
+        
     class Meta:
         ordering = ['yearly', '-date']
         verbose_name = _('public holiday')

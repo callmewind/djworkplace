@@ -8,13 +8,24 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 
 @receiver(post_save, sender=Vacation)
-def onVacationsRequest(sender, instance, created, **kwargs):
+def on_vacations_request(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
                 _('Vacations request'),
                 _("%s is requesting a vacation period from %s to %s") % (instance.user, instance.start, instance.end),
-                [manager.email for manager in instance.user.staffprofile.department.managers.all()]
+                [ manager.email for manager in instance.user.staffprofile.department.managers.all() ]
+            )
+        )
+
+@receiver(post_save, sender=Vacation)
+def on_vacations_approval(sender, instance, created, **kwargs):
+    if instance.approval_date and not (instance.updated - instance.approval_date).seconds:
+        from djworkplace.tasks import enqueue_mail
+        transaction.on_commit(lambda: enqueue_mail(
+                _('Vacations request approved'),
+                _("Your vacations request from %s to %s has been approved") % (instance.start, instance.end),
+                [ instance.user.email ]
             )
         )
 
