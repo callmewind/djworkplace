@@ -6,6 +6,8 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, timedelta
 from staff.models import Location
+from .managers import *
+from .utils import location_holiday_dates, is_working_day
 
 class Vacation(models.Model):
     calendar_template = 'holidays/vacations_event.html'
@@ -22,6 +24,12 @@ class Vacation(models.Model):
 
     def dates(self):
         return (self.start + timedelta(days=d) for d in range((self.end - self.start).days + 1))
+
+    def working_dates(self):
+        return (d for d in self.dates() if is_working_day(d, self.user.staffprofile.location))
+
+    def working_days(self):
+        return len(list(self.working_dates()))
 
     def clean(self):
         super().clean()
@@ -54,6 +62,7 @@ class Vacation(models.Model):
         verbose_name_plural = _('vacations')
 
 class PublicHoliday(models.Model):
+    objects = PublicHolidayManager()
     calendar_template = 'holidays/holiday_event.html'
     date = models.DateField(_('date'))
     yearly = models.BooleanField(_('yearly'))

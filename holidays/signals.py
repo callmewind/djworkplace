@@ -6,6 +6,7 @@ from staff.signals import calendar_display
 from staff.views import CalendarView
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from .utils import is_working_day
 
 @receiver(post_save, sender=Vacation)
 def on_vacations_request(sender, instance, created, **kwargs):
@@ -57,8 +58,7 @@ def on_calendar_display(sender, days, department, location, **kwargs):
                     public_holidays_dates.append(holiday.date)
                     break
 
-    def is_working_day(date):
-        return date.weekday() < 5 and date not in public_holidays_dates
+    
 
     vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
     if department:
@@ -67,11 +67,7 @@ def on_calendar_display(sender, days, department, location, **kwargs):
         vacations = vacations.filter(user__staffprofile__location=location)
 
     for vacation in vacations:
-        day = max(vacation.start, first_day_of_calendar)
-        while day <= min(vacation.end, last_day_of_calendar):
-            if is_working_day(day):
-                days[day]['events'].append(vacation)
-            day = day + timedelta(days=1)
-
+        for date in [d for d in vacation.dates() if d in days and is_working_day(d, vacation.user.staffprofile.location)]:
+            days[date]['events'].append(vacation)
 
 

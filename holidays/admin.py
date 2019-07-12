@@ -11,10 +11,6 @@ class VacationsAdmin(admin.ModelAdmin):
 	raw_id_fields = ('user', 'approved_by',)
 	readonly_fields = ('created', 'updated', 'approval_date',)
 
-	def working_days(self, obj):
-		print(list(obj.dates()))
-		return 'aaa'
-
 	def department(self, obj):
 		return obj.user.staffprofile.department
 
