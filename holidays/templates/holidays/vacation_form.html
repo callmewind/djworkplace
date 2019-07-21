@@ -3,7 +3,21 @@
 {% block main %}
 <main class="container my-auto">
 	<div class="row">
-		<div class="col-lg-6 offset-lg-3">
+		<div class="col-lg-3 offset-lg-1">
+			<div class="card">
+			  <div class="card-header">
+			  	{% now "Y" as current_year %}
+			    {% blocktrans %}Your {{ current_year }} vacations{% endblocktrans %}
+			  </div>
+			  <ul class="list-group list-group-flush">
+			  	<li class="list-group-item">{% blocktrans with total=user.staffprofile.department.vacations %}{{ total}} per year{% endblocktrans %}</li>
+			    <li class="list-group-item">{% blocktrans %}{{ approved }} approved{% endblocktrans %}</li>
+			    <li class="list-group-item">{% blocktrans %}{{ pending }} pending approval{% endblocktrans %}</li>
+			    <li class="list-group-item">{% blocktrans %}{{ available }} available{% endblocktrans %}</li>
+			  </ul>
+			</div>
+		</div>
+		<div class="col-lg-6">
 			<div class="jumbotron">
 				<h1 class="text-center">{% trans "Vacations request" %}</h1>
 				<form method="POST" action="{% url 'holidays:create-vacations' %}">

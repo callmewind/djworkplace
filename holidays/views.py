@@ -16,10 +16,9 @@ class CreateVacations(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         year = timezone.now().year
-        approved = 0
-        pending_approval = 0
-        #for v in Vacation.objects.filter(user=self.request.user).filter(Q(start__year=year)|Q(end__year=year)):
-            
+        context['approved'] = self.request.user.staffprofile.current_year_approved_vacations()
+        context['pending'] = self.request.user.staffprofile.current_year_pending_vacations()
+        context['available'] = max(self.request.user.staffprofile.department.vacations - context['approved'] - context['pending'], 0)
         return context
 
     def get_success_url(self):

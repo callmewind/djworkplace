@@ -1,7 +1,9 @@
 from django.conf import settings
 from django import forms
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 
 class Department(models.Model):
@@ -36,11 +38,21 @@ class StaffProfile(models.Model):
     location = models.ForeignKey(Location, on_delete=models.PROTECT, verbose_name=_('location'), blank=True, null=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True)
 
-    def has_add_permission(self, request, obj=None):
-        return False
+    def current_year_approved_vacations(self):
+        from holidays.models import Vacation
+        year = timezone.now().year
+        count = 0  
+        for v in Vacation.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
+            count += len([d for d in v.working_dates() if d.year == year])
+        return count
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    def current_year_pending_vacations(self):
+        from holidays.models import Vacation
+        year = timezone.now().year
+        count = 0  
+        for v in Vacation.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
+            count += len([d for d in v.working_dates() if d.year == year])
+        return count
 
     def __str__(self):
         return str(self.user_id)

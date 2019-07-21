@@ -22,12 +22,25 @@ class StaffAdmin(UserAdmin):
     inlines = (StaffProfileInline,)
     list_select_related = ('staffprofile__department', 'staffprofile__location',)
     list_display = UserAdmin.list_display + ('department', 'location',)
+    readonly_fields = ('vacations_per_year', 'current_year_approved_vacations', 'current_year_pending_vacations')
+    fieldsets = UserAdmin.fieldsets + (
+            ('Vacatons', {'fields': ('vacations_per_year', 'current_year_approved_vacations', 'current_year_pending_vacations')}),
+    )
 
     def department(self, obj):
         return obj.staffprofile.department
 
     def location(self, obj):
         return obj.staffprofile.location
+
+    def current_year_approved_vacations(self, obj):
+        return obj.staffprofile.current_year_approved_vacations()
+
+    def current_year_pending_vacations(self, obj):
+        return obj.staffprofile.current_year_approved_vacations()
+
+    def vacations_per_year(self, obj):
+        return obj.staffprofile.department.vacations
 
 
 @admin.register(Department)
