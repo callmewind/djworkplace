@@ -37,7 +37,7 @@ class StaffAdmin(UserAdmin):
         return obj.staffprofile.current_year_approved_vacations()
 
     def current_year_pending_vacations(self, obj):
-        return obj.staffprofile.current_year_approved_vacations()
+        return obj.staffprofile.current_year_pending_vacations()
 
     def vacations_per_year(self, obj):
         return obj.staffprofile.department.vacations
