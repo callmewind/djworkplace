@@ -147,3 +147,5 @@ EMAIL_DEFAULT_REPLY_TO = env('EMAIL_DEFAULT_REPLY_TO', default='noreply@example.
 
 APP_URL = env('APP_URL', default='http://example.com')
 APP_NAME = env('APP_NAME', default='djWorkplace')
+
+ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', default='%s:%s' % (DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_EMAIL))]
