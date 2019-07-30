@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 
-def enqueue_mail(subject, message, recipient_list, context={}, template='email/base.html', from_email=settings.EMAIL_DEFAULT_REPLY_TO):
+def enqueue_mail(subject, message, recipient_list, context={}, template='email/base.html', from_email=settings.DEFAULT_FROM_EMAIL):
     context.update({
         'base_url' : settings.APP_URL,
         'subject' : subject,
@@ -15,5 +15,5 @@ def enqueue_mail(subject, message, recipient_list, context={}, template='email/b
 
 
 @shared_task
-def mail_task(subject, message, recipient_list, html_message=None, from_email=settings.EMAIL_DEFAULT_REPLY_TO):
+def mail_task(subject, message, recipient_list, html_message=None, from_email=settings.DEFAULT_FROM_EMAIL):
     send_mail(subject, message, from_email, recipient_list, html_message)
