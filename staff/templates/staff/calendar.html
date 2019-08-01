@@ -7,6 +7,7 @@
 	.calendar .table thead tr{ height: 1rem }
 	.calendar .table td { width: 14.2857% }
 </style>
+<script type="module" src="/static/notifications.js" async></script>
 {% endblock head-content %}
 
 {% block main %}
@@ -15,6 +16,7 @@
 		<div class="form-inline mb-2 mt-1">
 			{% bootstrap_field form.location show_label=False bound_css_class='' size='small' %}
 			{% bootstrap_field form.department show_label=False bound_css_class='' field_class='ml-2' size='small' %}
+			<span class="mx-3">{{ current_month|date:_('Y, F') }}</span>
 			<div class="btn-group ml-2 bg-white" role="group">
 				<a href="{% url 'staff:calendar' previous_month.year previous_month.month %}?{{ request.GET.urlencode }}" class="btn btn-outline-primary btn-sm">
 					« {% trans "Prev" %}

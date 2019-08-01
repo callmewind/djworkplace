@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     'staff.apps.StaffConfig',
     'holidays.apps.HolidaysConfig',
     'django_premailer',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -150,3 +152,9 @@ APP_NAME = env('APP_NAME', default='djWorkplace')
 
 ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', default=['%s:%s' % (DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_EMAIL)])]
 
+if DEBUG:
+    import socket
+    INTERNAL_IPS = ['127.0.0.1', ]
+    # tricks to have debug toolbar when developing with docker
+    ip = socket.gethostbyname(socket.gethostname())
+    INTERNAL_IPS += [ip[:-1] + '1']
