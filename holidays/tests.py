@@ -25,19 +25,19 @@ class LeavesTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_leave_model(self):
-        h = Leave.objects.create(user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
-        
+        t = LeaveType.objects.get(pk=1)
+        h = Leave.objects.create(type=t, user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
+
         with self.assertRaisesMessage(ValidationError, 'worker must be in a department first'):
             h.clean()
-        
+
         self.worker.staffprofile.department = self.department
         self.worker.staffprofile.save()
 
         h.save()
-        
+
         with self.assertRaisesMessage(ValidationError, '%s is not a manager of %s department' % (self.manager, self.worker.staffprofile.department)):
             h.approved_by = self.manager
             h.clean()
 
         self.department.managers.add(self.manager)
-       
