@@ -38,19 +38,19 @@ class StaffProfile(models.Model):
     location = models.ForeignKey(Location, on_delete=models.PROTECT, verbose_name=_('location'), blank=True, null=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True)
 
-    def current_year_approved_vacations(self):
-        from holidays.models import Vacation
+    def current_year_approved_leaves(self):
+        from holidays.models import Leave
         year = timezone.now().year
         count = 0  
-        for v in Vacation.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
+        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
             count += len([d for d in v.working_dates() if d.year == year])
         return count
 
-    def current_year_pending_vacations(self):
-        from holidays.models import Vacation
+    def current_year_pending_leaves(self):
+        from holidays.models import Leave
         year = timezone.now().year
         count = 0  
-        for v in Vacation.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
+        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
             count += len([d for d in v.working_dates() if d.year == year])
         return count
 

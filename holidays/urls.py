@@ -4,5 +4,5 @@ from .views import *
 app_name = 'holidays'
 
 urlpatterns = [
-   path('create_vacations/', CreateVacations.as_view(), name='create-vacations'),
+   path('request_leave/', RequestLeave.as_view(), name='request-leave'),
 ]

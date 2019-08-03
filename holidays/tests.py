@@ -8,9 +8,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 
-class VacationsTestCase(TestCase):
+class LeavesTestCase(TestCase):
 
-    fixtures = ['staff-testing-data.json', 'vacations-testing-data.json']
+    fixtures = ['staff-testing-data.json', 'leave-testing-data.json']
 
     def setUp(self):
         self.client = Client()
@@ -18,14 +18,14 @@ class VacationsTestCase(TestCase):
         self.worker = get_user_model().objects.create(username='worker', email='worker@example.com')
         self.manager = get_user_model().objects.create(username='manager', email='manager@example.com')
 
-    def test_vacations_admin(self):
+    def test_leave_admin(self):
         response = self.client.post(settings.LOGIN_URL, {'username': settings.DEFAULT_ADMIN_USERNAME, 'password': settings.DEFAULT_ADMIN_PASSWORD})
         self.assertEqual(response.status_code, 302)
-        response = self.client.get(reverse('admin:holidays_vacation_changelist'))
+        response = self.client.get(reverse('admin:holidays_leave_changelist'))
         self.assertEqual(response.status_code, 200)
 
-    def test_vacation_model(self):
-        h = Vacation.objects.create(user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
+    def test_leave_model(self):
+        h = Leave.objects.create(user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
         
         with self.assertRaisesMessage(ValidationError, 'worker must be in a department first'):
             h.clean()

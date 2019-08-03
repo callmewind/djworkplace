@@ -9,7 +9,7 @@ from staff.models import Location
 from .managers import *
 from .utils import location_holiday_dates, is_working_day
 
-class Vacation(models.Model):
+class Leave(models.Model):
     calendar_template = 'holidays/vacations_event.html'
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='vacations')
     start = models.DateField(_('start'))
@@ -18,6 +18,7 @@ class Vacation(models.Model):
     updated = models.DateTimeField(auto_now=True)
     approval_date = models.DateTimeField(blank=True, null=True, editable=False)
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True)
+    notes = models.TextField(blank=True, max_length=500)
 
     def __str__(self):
         return "%d %s - %s" % (self.user_id, self.start, self.end)
@@ -42,11 +43,11 @@ class Vacation(models.Model):
         start_collision = Q(start__lte=self.start, end__gte=self.start)
         end_collision = Q(start__lte=self.end, end__gte=self.end)
         contained_collission = Q(start__gte=self.start, end__lte=self.end)
-        collisions = Vacation.objects.filter(user=self.user).exclude(pk=self.pk).filter(
+        collisions = Leave.objects.filter(user=self.user).exclude(pk=self.pk).filter(
             start_collision|end_collision|contained_collission
         )
         if collisions.exists():
-            raise ValidationError('There are other vacations requests with some colliding days')
+            raise ValidationError('There are other leave requests with some colliding days')
 
         if self.approved_by:
             if not self.user.staffprofile.department.managers.filter(pk=self.approved_by.pk).exists():
@@ -58,8 +59,8 @@ class Vacation(models.Model):
 
     class Meta:
         ordering = ['-start', '-end']
-        verbose_name = _('vacations')
-        verbose_name_plural = _('vacations')
+        verbose_name = _('leave')
+        verbose_name_plural = _('leaves')
 
 class PublicHoliday(models.Model):
     objects = PublicHolidayManager()

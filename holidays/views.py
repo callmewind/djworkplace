@@ -9,15 +9,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class CreateVacations(LoginRequiredMixin, CreateView):
-    model = Vacation
-    form_class = VacationsForm
+class RequestLeave(LoginRequiredMixin, CreateView):
+    model = Leave
+    form_class = LeaveForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         year = timezone.now().year
-        context['approved'] = self.request.user.staffprofile.current_year_approved_vacations()
-        context['pending'] = self.request.user.staffprofile.current_year_pending_vacations()
+        context['approved'] = self.request.user.staffprofile.current_year_approved_leaves()
+        context['pending'] = self.request.user.staffprofile.current_year_pending_leaves()
         context['available'] = max(self.request.user.staffprofile.department.vacations - context['approved'] - context['pending'], 0)
         return context
 
@@ -30,6 +30,6 @@ class CreateVacations(LoginRequiredMixin, CreateView):
         return initial
 
     def form_valid(self, form):
-        response = super(CreateVacations, self).form_valid(form)
-        messages.info(self.request, _('Your vacations request has been sent'))
+        response = super().form_valid(form)
+        messages.info(self.request, _('Your leave request has been sent'))
         return response

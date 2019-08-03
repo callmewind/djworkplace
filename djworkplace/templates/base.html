@@ -32,8 +32,8 @@
               </li>
               {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link py-0" href="{% url 'holidays:create-vacations' %}">
-                  {% trans "Request vacations" %}
+                <a class="nav-link py-0" href="{% url 'holidays:request-leave' %}">
+                  {% trans "Request leave" %}
                 </a>
               </li>
               {% endif %}

@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import *
 
-@admin.register(Vacation)
-class VacationsAdmin(admin.ModelAdmin):
+@admin.register(Leave)
+class LeavesAdmin(admin.ModelAdmin):
 	list_select_related = ('user__staffprofile__department', 'user__staffprofile__location')
 	list_display = ('user', 'start', 'end', 'department', 'location', 'approval_date', 'working_days')
 	list_filter = ('user__staffprofile__department', 'user__staffprofile__location')

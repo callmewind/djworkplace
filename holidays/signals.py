@@ -8,24 +8,24 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from .utils import is_working_day
 
-@receiver(post_save, sender=Vacation)
-def on_vacations_request(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Leave)
+def on_leave_request(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
-                _('Vacations request'),
-                _("%s is requesting a vacation period from %s to %s") % (instance.user, instance.start, instance.end),
+                _('Leave request'),
+                _("%s is requesting a leave period from %s to %s") % (instance.user, instance.start, instance.end),
                 [ manager.email for manager in instance.user.staffprofile.department.managers.all() ]
             )
         )
 
-@receiver(post_save, sender=Vacation)
-def on_vacations_approval(sender, instance, created, **kwargs):
+@receiver(post_save, sender=Leave)
+def on_leave_approval(sender, instance, created, **kwargs):
     if instance.approval_date and not (instance.updated - instance.approval_date).seconds:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
-                _('Vacations request approved'),
-                _("Your vacations request from %s to %s has been approved") % (instance.start, instance.end),
+                _('Leave request approved'),
+                _("Your leave request from %s to %s has been approved") % (instance.start, instance.end),
                 [ instance.user.email ]
             )
         )
@@ -66,14 +66,14 @@ def on_calendar_display(sender, days, department, location, **kwargs):
 
     
 
-    vacations = Vacation.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
+    leaves = Leave.objects.filter(Q(start__range=(first_day_of_calendar, last_day_of_calendar))|Q(end__range=(first_day_of_calendar, last_day_of_calendar)))
     if department:
-        vacations = vacations.filter(user__staffprofile__department=department)
+        leaves = leaves.filter(user__staffprofile__department=department)
     if location:
-        vacations = vacations.filter(user__staffprofile__location=location)
+        leaves = leaves.filter(user__staffprofile__location=location)
 
-    for vacation in vacations:
-        for date in [d for d in vacation.dates() if d in days and is_working_day(d, vacation.user.staffprofile.location)]:
-            days[date]['events'].append(vacation)
+    for leave in leaves:
+        for date in [d for d in leave.dates() if d in days and is_working_day(d, leave.user.staffprofile.location)]:
+            days[date]['events'].append(leave)
 
 

@@ -20,7 +20,7 @@
 		<div class="col-lg-6">
 			<div class="jumbotron">
 				<h1 class="text-center">{% trans "Vacations request" %}</h1>
-				<form method="POST" action="{% url 'holidays:create-vacations' %}">
+				<form method="POST" action="{% url 'holidays:request-leave' %}">
 					{% csrf_token %}
 					{% bootstrap_form form %}
 					{% bootstrap_button _("Send request") button_type="submit" button_class="btn-primary" %}
