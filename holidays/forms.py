@@ -8,7 +8,7 @@ class LeaveForm(forms.ModelForm):
 
     class Meta:
         model = Leave
-        fields = ['start', 'end', 'user', 'notes']
+        fields = ['type', 'start', 'end', 'user', 'notes']
         widgets = {
             'start': forms.DateInput(attrs={'type': 'date'}),
             'end': forms.DateInput(attrs={'type': 'date'}),

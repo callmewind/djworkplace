@@ -9,9 +9,22 @@ from staff.models import Location
 from .managers import *
 from .utils import location_holiday_dates, is_working_day
 
+class LeaveType(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    icon = models.CharField(max_length=3)
+
+    def __str__(self):
+        return "%s %s" % (self.icon, self.name,)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = _('leave type')
+        verbose_name_plural = _('leave types')
+
 class Leave(models.Model):
-    calendar_template = 'holidays/vacations_event.html'
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='vacations')
+    calendar_template = 'holidays/leave_event.html'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='leaves')
+    type = models.ForeignKey(LeaveType, on_delete=models.PROTECT, verbose_name=_('type'), related_name='leaves')
     start = models.DateField(_('start'))
     end = models.DateField(_('end'))
     created = models.DateTimeField(auto_now_add=True)

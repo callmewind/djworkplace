@@ -13,8 +13,8 @@ def on_leave_request(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
-                _('Leave request'),
-                _("%s is requesting a leave period from %s to %s") % (instance.user, instance.start, instance.end),
+                _('%s request') % instance.type,
+                _("%s is requesting a %s period from %s to %s") % (instance.user, instance.type, instance.start, instance.end),
                 [ manager.email for manager in instance.user.staffprofile.department.managers.all() ]
             )
         )
@@ -25,7 +25,7 @@ def on_leave_approval(sender, instance, created, **kwargs):
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
                 _('Leave request approved'),
-                _("Your leave request from %s to %s has been approved") % (instance.start, instance.end),
+                _("Your %s request from %s to %s has been approved") % (instance.type, instance.start, instance.end),
                 [ instance.user.email ]
             )
         )
@@ -72,7 +72,7 @@ def on_calendar_display(sender, days, department, location, **kwargs):
     if location:
         leaves = leaves.filter(user__staffprofile__location=location)
 
-    for leave in leaves:
+    for leave in leaves.select_related('type'):
         for date in [d for d in leave.dates() if d in days and is_working_day(d, leave.user.staffprofile.location)]:
             days[date]['events'].append(leave)
 
