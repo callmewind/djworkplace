@@ -7,7 +7,7 @@ from django.utils import timezone
 
 
 class Department(models.Model):
-    name = models.CharField(_('name'), max_length=200)
+    name = models.CharField(_('name'), max_length=200, unique=True)
     vacations = models.PositiveSmallIntegerField(_('vacations'), help_text=_('Yearly vacation days'))
     personal_days = models.PositiveSmallIntegerField(_('personal days'), help_text=_('Yearly personal days'))
     managers = models.ManyToManyField(settings.AUTH_USER_MODEL, verbose_name=_('managers'), related_name='managed_departments')
@@ -21,7 +21,7 @@ class Department(models.Model):
         verbose_name_plural = _('departments')
 
 class Location(models.Model):
-    name = models.CharField(_('name'), max_length=200)
+    name = models.CharField(_('name'), max_length=200, unique=True)
 
     def __str__(self):
         return self.name
