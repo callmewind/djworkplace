@@ -1,4 +1,5 @@
 from django.views.generic.edit import CreateView
+from django.contrib import messages
 from .models import *
 from .forms import *
 from django.urls import reverse
@@ -7,11 +8,21 @@ from django.utils import timezone
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+
 
 
 class RequestLeave(LoginRequiredMixin, CreateView):
     model = Leave
     form_class = LeaveForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.staffprofile.department:
+            messages.warning(request, "You need to be part of a deparment")
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
