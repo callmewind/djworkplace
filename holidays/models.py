@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, timedelta
-from staff.models import Location
+from staff.models import Location, Department
 from .managers import *
 from .utils import location_holiday_dates, is_working_day
 
@@ -20,6 +20,21 @@ class LeaveType(models.Model):
         ordering = ['name']
         verbose_name = _('leave type')
         verbose_name_plural = _('leave types')
+
+class LeaveLimit(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_('department'), related_name='leave_limits')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name=_('location'), related_name='leave_limits')
+    type = models.ForeignKey(LeaveType, on_delete=models.PROTECT, verbose_name=_('type'), related_name='department_leaves')
+    days = models.PositiveSmallIntegerField(verbose_name=_('days'), help_text=_('Yearly permission days for this type'))
+
+    class Meta:
+        ordering = ['department', 'location']
+        verbose_name = _('leave limit')
+        verbose_name_plural = _('leave limits')
+        unique_together = (('department', 'location', 'type'),)
+
+    def __str__(self):
+        return "%d/%d/%d - %d" % (self.department_id, self.location_id, self.type_id, self.days)
 
 class Leave(models.Model):
     calendar_template = 'holidays/leave_event.html'

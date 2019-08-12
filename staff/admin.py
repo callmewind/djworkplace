@@ -42,15 +42,14 @@ class StaffAdmin(UserAdmin):
     def vacations_per_year(self, obj):
         return obj.staffprofile.department.vacations
 
-
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'vacations', 'personal_days',)
     search_fields = ('name',)
     filter_horizontal = ('managers',)
 
-    
+
 @admin.register(Location)
-class DepartmentAdmin(admin.ModelAdmin):
+class LocationAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)

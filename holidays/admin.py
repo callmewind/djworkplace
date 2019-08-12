@@ -9,6 +9,14 @@ class LeaveTypeAdmin(admin.ModelAdmin):
         #Return empty perms dict thus hiding the model from admin index.
         return {}
 
+@admin.register(LeaveLimit)
+class LeaveLimitAdmin(admin.ModelAdmin):
+    list_select_related = ('location', 'department', 'type',)
+    list_display = ('location', 'department', 'type', 'days',)
+    search_fields = ('department__name', 'location__name', 'type__name',)
+    list_filter = ('department', 'location', 'type',)
+
+
 
 @admin.register(Leave)
 class LeavesAdmin(admin.ModelAdmin):
