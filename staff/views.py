@@ -36,17 +36,24 @@ class CalendarView(LoginRequiredMixin, TemplateView):
                 context['weeks'].append(current_week)
                 current_week = list()
             current_date = current_date + timedelta(days=1)
-        for birthday in Birthday.objects.filter(birthday__in=days.keys()).select_related('user'):
-            days[birthday.birthday]['events'].append(birthday)
+        months = list()
+        if last_day_of_calendar.month >= first_day_of_calendar.month:
+            months = list(range(first_day_of_calendar.month, last_day_of_calendar.month + 1))
+        else: #Corner case donde pillamos diciembre+enero+ por ejemplo
+            months = list(range(first_day_of_calendar.month, 12 + 1)) + list(range(1, last_day_of_calendar.month + 1))
+        for birthday in Birthday.objects.filter(birthday__month__in=months).select_related('user'):
+            for y in range(first_day_of_calendar.year, last_day_of_calendar.year + 1):
+                birthday.birthday = birthday.birthday.replace(year=y)
+                if birthday.birthday in days:
+                    days[birthday.birthday]['events'].append(birthday)
         context['previous_month'] = first_day_of_month - timedelta(days=1)
         context['current_month'] = first_day_of_month
         context['next_month'] = last_day_of_month + timedelta(days=1)
         form = CalendarFilterForm(self.request.GET)
         context['form'] = form
         if form.is_valid():
-            calendar_display.send(sender=self.__class__, days=days,
+            calendar_display.send(sender=self.__class__, days=days, months=months,
                 department=form.cleaned_data['department'], location=form.cleaned_data['location'])
         else:
-            calendar_display.send(sender=self.__class__, days=days, department=None, location=None)
+            calendar_display.send(sender=self.__class__, days=days, months=months, department=None, location=None)
         return context
-

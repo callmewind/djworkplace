@@ -7,13 +7,48 @@
 			<div class="card">
 			  <div class="card-header">
 			  	{% now "Y" as current_year %}
-			    {% blocktrans %}Your {{ current_year }} vacations{% endblocktrans %}
+			    {% blocktrans %}Your {{ current_year }} leaves{% endblocktrans %}
 			  </div>
 			  <ul class="list-group list-group-flush">
-			  	<li class="list-group-item">{% blocktrans with total=user.staffprofile.department.vacations %}{{ total}} per year{% endblocktrans %}</li>
-			    <li class="list-group-item">{% blocktrans %}{{ approved }} approved{% endblocktrans %}</li>
-			    <li class="list-group-item">{% blocktrans %}{{ pending }} pending approval{% endblocktrans %}</li>
-			    <li class="list-group-item">{% blocktrans %}{{ available }} available{% endblocktrans %}</li>
+			  	{% for leave_limit in user.staffprofile.department.leave_limits.all %}
+			  	<li class="list-group-item">
+			  		<p><strong>{{ leave_limit.type }}</strong></p>
+			  		<ul class="small list-unstyled">
+			  			<li>
+			  				📅
+				  			{% blocktrans count days=leave_limit.days with type=leave_limit.type %}
+				  			{{ days }} day per year
+				  			{% plural %}
+				  			{{ days }} days per year
+				  			{% endblocktrans %}
+			  			</li>
+			  			<li>
+			  				✅
+				  			{% blocktrans count days=3 %}
+				  			{{ days }} approved
+				  			{% plural %}
+				  			{{ days }} approved
+				  			{% endblocktrans %}
+			  			</li>
+			  			<li>
+			  				💬
+				  			{% blocktrans count days=2 %}
+				  			{{ days }} pending approval
+				  			{% plural %}
+				  			{{ days }} pending approval
+				  			{% endblocktrans %}
+			  			</li>
+			  			<li>
+			  				⭐
+				  			{% blocktrans count days=6 %}
+				  			{{ days }} available
+				  			{% plural %}
+				  			{{ days }} available
+				  			{% endblocktrans %}
+			  			</li>
+			  		</ul>
+			  	</li>
+			  	{% endfor %}
 			  </ul>
 			</div>
 		</div>
@@ -23,7 +58,7 @@
 				<form method="POST" action="{% url 'holidays:request-leave' %}">
 					{% csrf_token %}
 					{% bootstrap_form form %}
-					{% bootstrap_button _("Send request") button_type="submit" button_class="btn-primary" %}
+					{% bootstrap_button _("✔️ Send request") button_type="submit" button_class="btn-primary" %}
 				</form>
 			</div>
 		</div>

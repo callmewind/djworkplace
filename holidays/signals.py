@@ -31,17 +31,12 @@ def on_leave_approval(sender, instance, created, **kwargs):
         )
 
 @receiver(calendar_display, sender=CalendarView)
-def on_calendar_display(sender, days, department, location, **kwargs):
+def on_calendar_display(sender, days, months, department, location, **kwargs):
 
     day_list = list(days.keys())
     first_day_of_calendar = next(iter(day_list))
     last_day_of_calendar = next(reversed(day_list)) 
 
-    months = list()
-    if last_day_of_calendar.month >= first_day_of_calendar.month:
-        months = list(range(first_day_of_calendar.month, last_day_of_calendar.month + 1))
-    else: #Corner case donde pillamos diciembre+enero+ por ejemplo
-        months = list(range(first_day_of_calendar.month, 12 + 1)) + list(range(1, last_day_of_calendar.month + 1))
     public_holidays = PublicHoliday.objects.filter(
         Q(date__gte=first_day_of_calendar, date__lte=last_day_of_calendar)|
         Q(date__month__in=months, yearly=True)

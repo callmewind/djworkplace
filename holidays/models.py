@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, timedelta
 from staff.models import Location, Department
+from django.contrib.auth import get_user_model
 from .managers import *
 from .utils import location_holiday_dates, is_working_day
 
@@ -105,3 +106,27 @@ class PublicHoliday(models.Model):
         ordering = ['yearly', '-date']
         verbose_name = _('public holiday')
         verbose_name_plural = _('public holidays')
+
+class UserLeave(get_user_model()):
+
+    def current_year_approved_leaves(self):
+        print("HOLA")
+        from holidays.models import Leave
+        year = timezone.now().year
+        count = 0  
+        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
+            count += len([d for d in v.working_dates() if d.year == year])
+        return count
+
+    def current_year_pending_leaves(self):
+        from holidays.models import Leave
+        year = timezone.now().year
+        count = 0  
+        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
+            count += len([d for d in v.working_dates() if d.year == year])
+        return count
+    
+    class Meta:
+        proxy = True
+        verbose_name = _('user leaves')
+        verbose_name_plural = _('users leaves')

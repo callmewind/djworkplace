@@ -22,23 +22,22 @@ class RequestLeave(LoginRequiredMixin, CreateView):
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         year = timezone.now().year
-        context['approved'] = self.request.user.staffprofile.current_year_approved_leaves()
-        context['pending'] = self.request.user.staffprofile.current_year_pending_leaves()
-        context['available'] = max(self.request.user.staffprofile.department.vacations - context['approved'] - context['pending'], 0)
+        #context['approved'] = self.request.user.staffprofile.current_year_approved_leaves()
+        #context['pending'] = self.request.user.staffprofile.current_year_pending_leaves()
+        #context['available'] = max(self.request.user.staffprofile.department.vacations - context['approved'] - context['pending'], 0)
         return context
 
     def get_success_url(self):
         return reverse('staff:calendar', args=[self.object.start.year, self.object.start.month])
-
-    def get_initial(self):
-        initial = super().get_initial()
-        initial.update({'user' : self.request.user})
-        return initial
 
     def form_valid(self, form):
         response = super().form_valid(form)

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from staff.admin import StaffAdmin
 from .models import *
 
 @admin.register(LeaveType)
@@ -15,8 +16,6 @@ class LeaveLimitAdmin(admin.ModelAdmin):
     list_display = ('location', 'department', 'type', 'days',)
     search_fields = ('department__name', 'location__name', 'type__name',)
     list_filter = ('department', 'location', 'type',)
-
-
 
 @admin.register(Leave)
 class LeavesAdmin(admin.ModelAdmin):
@@ -45,4 +44,25 @@ class PublicHolidaysAdmin(admin.ModelAdmin):
         return super().get_queryset(request)
     
     
+@admin.register(UserLeave)
+class UserLeaveAdmin(StaffAdmin):
+    inlines = tuple()
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    fieldsets = (
+            ('Vacations', {'fields': ('current_year_leaves',)}),
+    )
+
+    def current_year_leaves(self, obj):
+        print("LALA")
+        return "FUFU"
+
     
