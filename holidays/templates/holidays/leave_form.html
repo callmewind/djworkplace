@@ -10,37 +10,37 @@
 			    {% blocktrans %}Your {{ current_year }} leaves{% endblocktrans %}
 			  </div>
 			  <ul class="list-group list-group-flush">
-			  	{% for leave_limit in user.staffprofile.department.leave_limits.all %}
+			  	{% for type, totals in leaves.items %}
 			  	<li class="list-group-item">
-			  		<p><strong>{{ leave_limit.type }}</strong></p>
+			  		<p><strong>{{ type }}</strong></p>
 			  		<ul class="small list-unstyled">
 			  			<li>
 			  				📅
-				  			{% blocktrans count days=leave_limit.days with type=leave_limit.type %}
+				  			{% blocktrans count days=totals.total %}
 				  			{{ days }} day per year
 				  			{% plural %}
 				  			{{ days }} days per year
 				  			{% endblocktrans %}
 			  			</li>
-			  			<li>
+			  			<li class="text-success">
 			  				✅
-				  			{% blocktrans count days=3 %}
+				  			{% blocktrans count days=totals.approved %}
 				  			{{ days }} approved
 				  			{% plural %}
 				  			{{ days }} approved
 				  			{% endblocktrans %}
 			  			</li>
-			  			<li>
+			  			<li class="text-warning">
 			  				💬
-				  			{% blocktrans count days=2 %}
+				  			{% blocktrans count days=totals.pending %}
 				  			{{ days }} pending approval
 				  			{% plural %}
 				  			{{ days }} pending approval
 				  			{% endblocktrans %}
 			  			</li>
-			  			<li>
+			  			<li class="text-info">
 			  				⭐
-				  			{% blocktrans count days=6 %}
+			  				{% blocktrans count days=totals.available %}
 				  			{{ days }} available
 				  			{% plural %}
 				  			{{ days }} available

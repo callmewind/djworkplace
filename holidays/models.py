@@ -76,7 +76,7 @@ class Leave(models.Model):
             start_collision|end_collision|contained_collission
         )
         if collisions.exists():
-            raise ValidationError('There are other leave requests with some colliding days')
+            raise ValidationError('There are other leave requests with one or more days colliding')
 
         if self.approved_by:
             if not self.user.staffprofile.department.managers.filter(pk=self.approved_by.pk).exists():
@@ -109,20 +109,18 @@ class PublicHoliday(models.Model):
 
 class UserLeave(get_user_model()):
 
-    def current_year_approved_leaves(self):
-        print("HOLA")
-        from holidays.models import Leave
+    def current_year_approved_leaves(self, type):
         year = timezone.now().year
         count = 0  
-        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
+        for v in Leave.objects.filter(user=self, type=type).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
             count += len([d for d in v.working_dates() if d.year == year])
         return count
 
-    def current_year_pending_leaves(self):
+    def current_year_pending_leaves(self, type):
         from holidays.models import Leave
         year = timezone.now().year
         count = 0  
-        for v in Leave.objects.filter(user=self.user).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
+        for v in Leave.objects.filter(user=self, type=type).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
             count += len([d for d in v.working_dates() if d.year == year])
         return count
     

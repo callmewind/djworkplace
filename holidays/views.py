@@ -31,9 +31,16 @@ class RequestLeave(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         year = timezone.now().year
-        #context['approved'] = self.request.user.staffprofile.current_year_approved_leaves()
-        #context['pending'] = self.request.user.staffprofile.current_year_pending_leaves()
-        #context['available'] = max(self.request.user.staffprofile.department.vacations - context['approved'] - context['pending'], 0)
+        context['leaves'] = {}
+        user_leave = UserLeave.objects.get(pk=self.request.user.pk)
+        for leave_limit in self.request.user.staffprofile.department.leave_limits.all().select_related('type'):
+            type_data = {
+                'approved'  : user_leave.current_year_approved_leaves(leave_limit.type),
+                'pending'   : user_leave.current_year_pending_leaves(leave_limit.type),
+                'total'     : leave_limit.days
+            }
+            type_data['available'] = max(type_data['total'] - type_data['approved'] - type_data['pending'], 0)
+            context['leaves'][leave_limit.type] = type_data   
         return context
 
     def get_success_url(self):
