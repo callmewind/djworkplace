@@ -1,0 +1,38 @@
+{% extends "admin/change_form.html" %}
+
+{% block after_related_objects %}
+<div class="js-inline-admin-formset inline-group">
+  <div class="tabular inline-related last-related">
+<fieldset class="module {{ inline_admin_formset.classes }}">
+   <h2>User Leave Summary</h2>
+   <table>
+     <thead><tr>
+       <th class="required">Total per year</th>
+       <th>Approved</th>
+       <th>Pending Approval</th>
+       <th>Available</th>
+     </tr></thead>
+
+     <tbody>
+     {% for type, totals in leave_summary.items %}
+        <tr class="form-row {% cycle 'row1' 'row2' %}">    
+          <td>
+              <p>{{ totals.total }}</p>
+          </td>
+          <td>
+              <p>{{ totals.approved }}</p>
+          </td>
+          <td>
+              <p>{{ totals.pending }}</p>
+          </td>
+          <td>
+              <p>{{ totals.available }}</p>
+          </td>
+        </tr>
+     {% endfor %}
+     </tbody>
+   </table>
+</fieldset>
+  </div>
+</div>
+{% endblock %}

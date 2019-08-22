@@ -1,5 +1,6 @@
 from django.core.cache import cache
 from django.db.models import Q
+from django.utils import timezone
 
 def location_holidays_key(year, location): return 'location-holidays-%d-%d' % (year, location.pk)
 
@@ -23,3 +24,19 @@ def is_working_day(date, location):
     year = date.year
     dates = cache.get_or_set(location_holidays_key(year, location), lambda: list(location_holiday_dates(year, location)))
     return date.weekday() < 5 and date not in dates
+
+def user_leave_summary(user):
+    from .models import UserLeave
+    year = timezone.now().year
+    leave_summary = {}
+    user_leave = UserLeave.objects.get(pk=user.pk)
+    for leave_limit in user.staffprofile.department.leave_limits.all().select_related('type'):
+        type_data = {
+            'approved'  : user_leave.current_year_approved_leaves(leave_limit.type),
+            'pending'   : user_leave.current_year_pending_leaves(leave_limit.type),
+            'total'     : leave_limit.days
+        }
+        type_data['available'] = max(type_data['total'] - type_data['approved'] - type_data['pending'], 0)
+        leave_summary[leave_limit.type] = type_data
+
+    return leave_summary

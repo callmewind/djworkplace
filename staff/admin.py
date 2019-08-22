@@ -8,6 +8,8 @@ admin.site.unregister(User)
 class StaffProfileInline(admin.TabularInline):
     model = StaffProfile
     extra = 0
+    can_delete = False
+    show_change_link = False
 
     def has_add_permission(self, request):
         return False

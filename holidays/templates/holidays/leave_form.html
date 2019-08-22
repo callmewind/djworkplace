@@ -10,7 +10,7 @@
 			    {% blocktrans %}Your {{ current_year }} leaves{% endblocktrans %}
 			  </div>
 			  <ul class="list-group list-group-flush">
-			  	{% for type, totals in leaves.items %}
+			  	{% for type, totals in leave_summary.items %}
 			  	<li class="list-group-item">
 			  		<p><strong>{{ type }}</strong></p>
 			  		<ul class="small list-unstyled">

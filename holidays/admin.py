@@ -1,6 +1,8 @@
 from django.contrib import admin
-from staff.admin import StaffAdmin
+from staff.admin import StaffAdmin, StaffProfileInline
 from .models import *
+from .utils import user_leave_summary
+
 
 @admin.register(LeaveType)
 class LeaveTypeAdmin(admin.ModelAdmin):
@@ -42,12 +44,17 @@ class PublicHolidaysAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request)
-    
+
+class ReadonlyStaffProfileInline(StaffProfileInline):
+    def has_change_permission(self, request, obj=None):
+        return False
     
 @admin.register(UserLeave)
 class UserLeaveAdmin(StaffAdmin):
-    inlines = tuple()
-
+    
+    inlines = (ReadonlyStaffProfileInline,)
+    fieldsets = ( StaffAdmin.fieldsets[1],)
+    
     def has_add_permission(self, request):
         return False
 
@@ -57,12 +64,13 @@ class UserLeaveAdmin(StaffAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    fieldsets = (
-            ('Vacations', {'fields': ('current_year_leaves',)}),
-    )
-
-    def current_year_leaves(self, obj):
-        print("LALA")
-        return "FUFU"
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        response = super().change_view(
+            request, object_id, form_url, extra_context=extra_context,
+        )
+        if 'original' in response.context_data:
+            response.context_data['leave_summary'] = user_leave_summary(response.context_data['original'])
+       
+        return response
 
     
