@@ -39,14 +39,14 @@ class LeaveLimit(models.Model):
 
 class Leave(models.Model):
     calendar_template = 'holidays/leave_event.html'
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='leaves')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), related_name='leaves', editable=False)
     type = models.ForeignKey(LeaveType, on_delete=models.PROTECT, verbose_name=_('type'), related_name='leaves')
     start = models.DateField(_('start'))
     end = models.DateField(_('end'))
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     approval_date = models.DateTimeField(blank=True, null=True, editable=False)
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True, editable=False)
     notes = models.TextField(blank=True, max_length=500)
 
     def __str__(self):
@@ -81,10 +81,14 @@ class Leave(models.Model):
         if self.approved_by:
             if not self.user.staffprofile.department.managers.filter(pk=self.approved_by.pk).exists():
                 raise ValidationError('%s is not a manager of %s department' % (self.approved_by, self.user.staffprofile.department))
+
+    def save(self, *args, **kwargs):
+        if self.approved_by:
             if not self.approval_date:
                 self.approval_date = timezone.now()
         else:
             self.approval_date = None
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-start', '-end']

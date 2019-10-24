@@ -1,9 +1,8 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 from .models import *
 
 class LeaveForm(forms.ModelForm):
-
-    user = None
 
     def __init__(self, *args, user, **kwargs):
         super().__init__(*args, **kwargs)
@@ -17,3 +16,12 @@ class LeaveForm(forms.ModelForm):
             'start': forms.DateInput(attrs={'type': 'date'}),
             'end': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+class AdminLeaveForm(forms.ModelForm):
+
+    approve = forms.BooleanField(label=_('Approve request'), required=False, help_text=_('check if you want to approve this request'))
+
+    class Meta:
+        model = Leave
+        fields = ['type', 'start', 'end', 'notes']

@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from staff.admin import StaffAdmin, StaffProfileInline
 from .models import *
+from .forms import *
 from .utils import user_leave_summary
 
 
@@ -19,21 +21,82 @@ class LeaveLimitAdmin(admin.ModelAdmin):
     search_fields = ('department__name', 'location__name', 'type__name',)
     list_filter = ('department', 'location', 'type',)
 
+
+class ApprovalStatusFilter(admin.SimpleListFilter):
+    title = _('approval status')
+    parameter_name = 'approval_status'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('approved', _('Approved')),
+            ('pending', _('Pending')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'approved':
+            return queryset.filter(approval_date__isnull=False)
+        if self.value() == 'pending':
+            return queryset.filter(approval_date__isnull=True)
+
 @admin.register(Leave)
 class LeavesAdmin(admin.ModelAdmin):
     list_select_related = ('type' ,'user__staffprofile__department', 'user__staffprofile__location')
     list_display = ('type', 'user', 'start', 'end', 'department', 'location', 'approval_date', 'working_days')
-    list_filter = ('type', 'user__staffprofile__department', 'user__staffprofile__location')
+    list_filter = (ApprovalStatusFilter, 'type', 'user__staffprofile__department', 'user__staffprofile__location', 'start',)
     search_fields = ('user__first_name', 'user__last_name', 'user__username', 'user__email')
     date_hierarchy = 'start'
-    raw_id_fields = ('user', 'approved_by',)
-    readonly_fields = ('created', 'updated', 'approval_date',)
+    readonly_fields = ('user', 'created', 'updated', 'approved_by', 'approval_date',)
+    
+    def get_fieldsets(self, request, obj):
+        if obj and not obj.approved_by and request.user.managed_departments.filter(staff=obj.user.staffprofile).exists():
+            return  (
+                (None, {
+                    'fields': (
+                        'user',
+                        'approve',
+                        'type', 
+                        ('start', 'end'),
+                        'notes',
+                    ),
+                }),
+                (_('Info'),{
+                    'fields' : ('created', 'updated',)
+                }),
+            )
+        else:
+            return  (
+                (None, {
+                    'fields': (
+                        'user',
+                        'type', 
+                        ('start', 'end'),
+                        'notes',
+                    ),
+                }),
+                (_('Info'),{
+                    'fields' : ('created', 'updated', 'approval_date', 'approved_by',)
+                }),
+            )
 
     def department(self, obj):
         return obj.user.staffprofile.department
 
     def location(self, obj):
         return obj.user.staffprofile.location
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_form(self, request, obj=None, **kwargs):
+        if obj and not obj.approved_by and request.user.managed_departments.filter(staff=obj.user.staffprofile).exists():
+            kwargs['form'] = AdminLeaveForm
+        return super().get_form(request, obj, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        if obj and form.cleaned_data.get('approve', False):
+            obj.approved_by = request.user
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(PublicHoliday)
 class PublicHolidaysAdmin(admin.ModelAdmin):

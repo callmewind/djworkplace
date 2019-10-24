@@ -34,7 +34,7 @@ class Location(models.Model):
 
 class StaffProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_('user'), editable=False)
-    department = models.ForeignKey(Department, on_delete=models.PROTECT, verbose_name=_('department'), blank=True, null=True)
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, verbose_name=_('department'), blank=True, null=True, related_name='staff')
     location = models.ForeignKey(Location, on_delete=models.PROTECT, verbose_name=_('location'), blank=True, null=True)
     birthday = models.DateField(_('birthday'), blank=True, null=True)
 
