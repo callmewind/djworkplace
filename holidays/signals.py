@@ -13,9 +13,10 @@ def on_leave_request(sender, instance, created, **kwargs):
     if created and not instance.approval_date:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
+                [ manager.email for manager in instance.user.staffprofile.department.managers.all() ],
                 _('%s request') % instance.type,
-                _("%s is requesting a %s period from %s to %s") % (instance.user, instance.type, instance.start, instance.end),
-                [ manager.email for manager in instance.user.staffprofile.department.managers.all() ]
+                template='holidays/email/leave_request.html',
+                context={ 'leave' : instance }
             )
         )
 
@@ -24,9 +25,9 @@ def on_leave_approval(sender, instance, created, **kwargs):
     if instance.approval_date and not (instance.updated - instance.approval_date).seconds:
         from djworkplace.tasks import enqueue_mail
         transaction.on_commit(lambda: enqueue_mail(
+                [ instance.user.email ],
                 _('Leave request approved'),
                 _("Your %s request from %s to %s has been approved") % (instance.type, instance.start, instance.end),
-                [ instance.user.email ]
             )
         )
 

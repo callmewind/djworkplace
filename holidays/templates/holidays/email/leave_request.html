@@ -1,0 +1,9 @@
+{% extends 'email/base.html' %}
+{% load i18n %}
+{% block content %}
+{% blocktrans with user=leave.user type=leave.type start=leave.start end=leave.end %}
+{{ user }} is requesting a {{ type }} period from {{ start }} to {{ end }}
+{% endblocktrans %}
+{% url 'admin:holidays_leave_change' leave.pk as url %}
+<a href="{{ url }}">View request <span style="display: none">{{ base_url }}{{ url }}</span></a>
+{% endblock content %}

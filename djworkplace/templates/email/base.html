@@ -44,7 +44,7 @@
     </head>
     <body>
 		{% block body %}
-	    {% block text-content %}<p>{{ message }}</p>{% endblock text-content %}
+	    {% block content %}<p>{{ message }}</p>{% endblock content %}
 	    <p><small>{{ site.name }} {% now "Y" %}</small></p>
 		{% endblock body %}
     </body>
