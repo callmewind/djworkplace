@@ -20,7 +20,7 @@ services:
     build: 
       context: .
       dockerfile: platform/dockerfile
-    command: celery -A djworkplace worker -l info
+    command: sh -c "pip install -r requirements.txt && celery -A djworkplace worker -l info"
     environment:
       - SECRET_KEY=testing_secret_key
     volumes:
