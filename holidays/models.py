@@ -9,6 +9,7 @@ from staff.models import Location, Department
 from django.contrib.auth import get_user_model
 from .managers import *
 from .utils import location_holiday_dates, is_working_day
+import datetime
 
 class LeaveType(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -48,7 +49,7 @@ class Leave(models.Model):
     approval_date = models.DateTimeField(blank=True, null=True, editable=False)
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True, editable=False)
     notes = models.TextField(blank=True, max_length=500)
-    year = models.PositiveSmallIntegerField(null=True)
+    year = models.PositiveSmallIntegerField(_('year'))
 
     def __str__(self):
         return "%d %s - %s" % (self.user_id, self.start, self.end)
@@ -69,6 +70,13 @@ class Leave(models.Model):
 
         if self.end < self.start:
             raise ValidationError("End date can't be before start date")
+
+        if min(self.start.year, self.end.year) < self.year:
+            raise ValidationError("Leave dates must be in year %d" % self.year)
+
+        max_date = datetime.date(self.year + 1, 3, 1) - datetime.timedelta(days=1)
+        if self.end > max_date:
+            raise ValidationError("Leaves for the %d period must be before %s" % (self.year, max_date))
 
         start_collision = Q(start__lte=self.start, end__gte=self.start)
         end_collision = Q(start__lte=self.end, end__gte=self.end)
@@ -114,19 +122,17 @@ class PublicHoliday(models.Model):
 
 class UserLeave(get_user_model()):
 
-    def current_year_approved_leaves(self, type):
-        year = timezone.now().year
+    def year_approved_leaves(self, type, year):
         count = 0  
-        for v in Leave.objects.filter(user=self, type=type).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=False):
-            count += len([d for d in v.working_dates() if d.year == year])
+        for v in Leave.objects.filter(user=self, type=type).filter(year=year, approval_date__isnull=False):
+            count += len(list(v.working_dates()))
         return count
 
-    def current_year_pending_leaves(self, type):
+    def year_pending_leaves(self, type, year):
         from holidays.models import Leave
-        year = timezone.now().year
         count = 0  
-        for v in Leave.objects.filter(user=self, type=type).filter(Q(start__year=year)|Q(end__year=year), approval_date__isnull=True):
-            count += len([d for d in v.working_dates() if d.year == year])
+        for v in Leave.objects.filter(user=self, type=type).filter(year=year, approval_date__isnull=True):
+            count += len(list(v.working_dates()))
         return count
     
     class Meta:

@@ -4,53 +4,54 @@
 <main class="container my-auto">
 	<div class="row">
 		<div class="col-lg-3 offset-lg-1">
-			<div class="card">
-			  <div class="card-header">
-			  	{% now "Y" as current_year %}
-			    {% blocktrans %}Your {{ current_year }} leaves{% endblocktrans %}
-			  </div>
-			  <ul class="list-group list-group-flush">
-			  	{% for type, totals in leave_summary.items %}
-			  	<li class="list-group-item">
-			  		<p><strong>{{ type }}</strong></p>
-			  		<ul class="small list-unstyled">
-			  			<li>
-			  				📅
-				  			{% blocktrans count days=totals.total %}
-				  			{{ days }} day per year
-				  			{% plural %}
-				  			{{ days }} days per year
-				  			{% endblocktrans %}
-			  			</li>
-			  			<li class="text-success">
-			  				✅
-				  			{% blocktrans count days=totals.approved %}
-				  			{{ days }} approved
-				  			{% plural %}
-				  			{{ days }} approved
-				  			{% endblocktrans %}
-			  			</li>
-			  			<li class="text-warning">
-			  				💬
-				  			{% blocktrans count days=totals.pending %}
-				  			{{ days }} pending approval
-				  			{% plural %}
-				  			{{ days }} pending approval
-				  			{% endblocktrans %}
-			  			</li>
-			  			<li class="text-info">
-			  				⭐
-			  				{% blocktrans count days=totals.available %}
-				  			{{ days }} available
-				  			{% plural %}
-				  			{{ days }} available
-				  			{% endblocktrans %}
-			  			</li>
-			  		</ul>
-			  	</li>
-			  	{% endfor %}
-			  </ul>
-			</div>
+			{% for year, leave_summary in leave_summaries %}
+				<div class="card mb-3">
+				  <div class="card-header">
+				    {% blocktrans %}Your {{ year }} leaves{% endblocktrans %}
+				  </div>
+				  <ul class="list-group list-group-flush">
+				  	{% for type, totals in leave_summary.items %}
+				  	<li class="list-group-item">
+				  		<p><strong>{{ type }}</strong></p>
+				  		<ul class="small list-unstyled">
+				  			<li>
+				  				📅
+					  			{% blocktrans count days=totals.total %}
+					  			{{ days }} day per year
+					  			{% plural %}
+					  			{{ days }} days per year
+					  			{% endblocktrans %}
+				  			</li>
+				  			<li class="text-success">
+				  				✅
+					  			{% blocktrans count days=totals.approved %}
+					  			{{ days }} approved
+					  			{% plural %}
+					  			{{ days }} approved
+					  			{% endblocktrans %}
+				  			</li>
+				  			<li class="text-warning">
+				  				💬
+					  			{% blocktrans count days=totals.pending %}
+					  			{{ days }} pending approval
+					  			{% plural %}
+					  			{{ days }} pending approval
+					  			{% endblocktrans %}
+				  			</li>
+				  			<li class="text-info">
+				  				⭐
+				  				{% blocktrans count days=totals.available %}
+					  			{{ days }} available
+					  			{% plural %}
+					  			{{ days }} available
+					  			{% endblocktrans %}
+				  			</li>
+				  		</ul>
+				  	</li>
+				  	{% endfor %}
+				  </ul>
+				</div>
+			{% endfor %}
 		</div>
 		<div class="col-lg-6">
 			<div class="jumbotron">

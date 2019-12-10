@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from staff.admin import StaffAdmin, StaffProfileInline
 from .models import *
 from .forms import *
@@ -41,8 +42,8 @@ class ApprovalStatusFilter(admin.SimpleListFilter):
 @admin.register(Leave)
 class LeavesAdmin(admin.ModelAdmin):
     list_select_related = ('type' ,'user__staffprofile__department', 'user__staffprofile__location')
-    list_display = ('type', 'user', 'start', 'end', 'department', 'location', 'approval_date', 'working_days')
-    list_filter = (ApprovalStatusFilter, 'type', 'user__staffprofile__department', 'user__staffprofile__location', 'start',)
+    list_display = ('type', 'user', 'year', 'start', 'end', 'department', 'location', 'approval_date', 'working_days')
+    list_filter = (ApprovalStatusFilter, 'type', 'year', 'user__staffprofile__department', 'user__staffprofile__location', 'start',)
     search_fields = ('user__first_name', 'user__last_name', 'user__username', 'user__email')
     date_hierarchy = 'start'
     readonly_fields = ('user', 'created', 'updated', 'approved_by', 'approval_date',)
@@ -132,7 +133,7 @@ class UserLeaveAdmin(StaffAdmin):
             request, object_id, form_url, extra_context=extra_context,
         )
         if 'original' in response.context_data:
-            response.context_data['leave_summary'] = user_leave_summary(response.context_data['original'])
+            response.context_data['leave_summary'] = user_leave_summary(response.context_data['original'], timezone.now().year)
        
         return response
 

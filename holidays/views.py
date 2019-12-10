@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
+from datetime import date
 
 
 
@@ -22,6 +23,11 @@ class RequestLeave(LoginRequiredMixin, CreateView):
             return redirect('home')
         return super().dispatch(request, *args, **kwargs)
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['year'] = date.today().year
+        return initial
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -30,7 +36,7 @@ class RequestLeave(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['leave_summary'] = user_leave_summary(self.request.user)
+        context['leave_summaries'] = [ (label, user_leave_summary(self.request.user, choice)) for choice, label in  context['form'].fields['year'].choices ]
         return context
 
     def get_success_url(self):

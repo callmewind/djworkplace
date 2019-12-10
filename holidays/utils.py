@@ -25,15 +25,14 @@ def is_working_day(date, location):
     dates = cache.get_or_set(location_holidays_key(year, location), lambda: list(location_holiday_dates(year, location)))
     return date.weekday() < 5 and date not in dates
 
-def user_leave_summary(user):
+def user_leave_summary(user, year):
     from .models import UserLeave
-    year = timezone.now().year
     leave_summary = {}
     user_leave = UserLeave.objects.get(pk=user.pk)
     for leave_limit in user.staffprofile.department.leave_limits.all().select_related('type'):
         type_data = {
-            'approved'  : user_leave.current_year_approved_leaves(leave_limit.type),
-            'pending'   : user_leave.current_year_pending_leaves(leave_limit.type),
+            'approved'  : user_leave.year_approved_leaves(leave_limit.type, year),
+            'pending'   : user_leave.year_pending_leaves(leave_limit.type, year),
             'total'     : leave_limit.days
         }
         type_data['available'] = max(type_data['total'] - type_data['approved'] - type_data['pending'], 0)
