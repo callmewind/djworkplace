@@ -48,6 +48,7 @@ class Leave(models.Model):
     approval_date = models.DateTimeField(blank=True, null=True, editable=False)
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name=_('approved by'), related_name='vacation_approvals', blank=True, null=True, editable=False)
     notes = models.TextField(blank=True, max_length=500)
+    year = models.PositiveSmallIntegerField(null=True)
 
     def __str__(self):
         return "%d %s - %s" % (self.user_id, self.start, self.end)
