@@ -44,7 +44,7 @@ def on_calendar_display(sender, days, months, department, location, **kwargs):
     )
 
     if location:
-        public_holidays = public_holidays.filter(Q(location__isnull=True)|Q(location=location))
+        public_holidays = public_holidays.filter(Q(locations__isnull=True)|Q(locations=location))
 
     public_holidays_dates = list()
 
