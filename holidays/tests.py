@@ -26,7 +26,7 @@ class LeavesTestCase(TestCase):
 
     def test_leave_model(self):
         t = LeaveType.objects.get(pk=1)
-        h = Leave.objects.create(type=t, user=self.worker, start=date.today(), end=date.today() + timedelta(days=1))
+        h = Leave.objects.create(type=t, user=self.worker, start=date.today(), end=date.today() + timedelta(days=1), year=date.today().year)
 
         with self.assertRaisesMessage(ValidationError, 'worker must be in a department first'):
             h.clean()

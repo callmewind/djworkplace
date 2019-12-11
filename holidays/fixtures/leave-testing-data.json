@@ -1,4 +1,4 @@
 [
 	{"model": "holidays.leavetype", "pk" : 1, "fields": {"name" : "vacations", "icon" : "☀️"}},
-	{"model": "holidays.leave", "pk": 1, "fields": {"type": 1, "user": 1, "start": "2050-01-01", "end": "2050-01-10", "approval_date": "2019-03-31T17:53:21.956Z","created": "2019-03-31T17:53:21.956Z","updated": "2019-03-31T17:53:21.956Z", "approved_by": 1}}
+	{"model": "holidays.leave", "pk": 1, "fields": {"year": 2050, "type": 1, "user": 1, "start": "2050-01-01", "end": "2050-01-10", "approval_date": "2019-03-31T17:53:21.956Z","created": "2019-03-31T17:53:21.956Z","updated": "2019-03-31T17:53:21.956Z", "approved_by": 1}}
 ]
