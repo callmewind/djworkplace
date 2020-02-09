@@ -74,7 +74,7 @@ class Leave(models.Model):
         if min(self.start.year, self.end.year) < self.year:
             raise ValidationError("Leave dates must be in year %d" % self.year)
 
-        max_date = datetime.date(self.year + 1, 3, 1) - datetime.timedelta(days=1)
+        max_date = datetime.date(self.year + 1, 4, 1) - datetime.timedelta(days=1)
         if self.end > max_date:
             raise ValidationError("Leaves for the %d period must be before %s" % (self.year, max_date))
 

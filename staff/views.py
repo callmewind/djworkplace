@@ -41,7 +41,7 @@ class CalendarView(LoginRequiredMixin, TemplateView):
             months = list(range(first_day_of_calendar.month, last_day_of_calendar.month + 1))
         else: #Corner case donde pillamos diciembre+enero+ por ejemplo
             months = list(range(first_day_of_calendar.month, 12 + 1)) + list(range(1, last_day_of_calendar.month + 1))
-        for birthday in Birthday.objects.filter(birthday__month__in=months).select_related('user'):
+        for birthday in Birthday.objects.filter(birthday__month__in=months, user__active=True).select_related('user'):
             for y in range(first_day_of_calendar.year, last_day_of_calendar.year + 1):
                 birthday.birthday = birthday.birthday.replace(year=y)
                 if birthday.birthday in days:

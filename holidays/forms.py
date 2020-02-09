@@ -12,7 +12,7 @@ class LeaveForm(forms.ModelForm):
         self.instance.user = user
         self.fields['type'].queryset = self.fields['type'].queryset.filter(department_leaves__department=user.staffprofile.department)
         year = date.today().year
-        max_date = datetime.date(year, 3, 1) - datetime.timedelta(days=1)
+        max_date = datetime.date(year, 4, 1) - datetime.timedelta(days=1)
         if max_date > date.today():
             self.fields['year'].choices = ((year - 1, year - 1), (year, year),)
         else:
